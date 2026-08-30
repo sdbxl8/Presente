@@ -14,6 +14,13 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
 
+            // Profesor responsable del grupo.
+            // Relación: un profesor puede tener varios grupos.
+            $table->foreignId('teacher_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
+            $table->string('name');
             $table->timestamps();
         });
     }

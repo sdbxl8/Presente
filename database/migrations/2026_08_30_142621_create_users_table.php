@@ -20,10 +20,8 @@ return new class extends Migration
             $table->string('degree')->nullable();
             $table->string('course')->nullable();
 
-            $table->foreignId('group_id')
-                ->nullable()
-                ->constrained()
-                ->nullOnDelete();
+            $table->foreignId('group_id') //Porque un alumno puede registrarse primero y unirse al grupo después y un profesor directamente no tiene grupo.
+                ->nullable();
 
             $table->timestamps();
         });
