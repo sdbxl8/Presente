@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('justifications', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('attendance_id')
+                  ->constrained('attendances')
+                  ->cascadeOnDelete()
+                  ->unique();
+
+            $table->text('reason');
+            $table->string('document_path')
+                  ->nullable();
+
             $table->timestamps();
         });
     }

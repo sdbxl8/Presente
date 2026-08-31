@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
 
             // Clase a la que corresponde la asistencia.
-            $table->foreignId('class_id')
-                ->constrained('classes')
+            $table->foreignId('class_session_id')
+                ->constrained('class_sessions')
                 ->cascadeOnDelete();
 
             // Alumno que realiza la asistencia.
@@ -34,14 +34,14 @@ return new class extends Migration
             ]);
 
             // Momento exacto en el que el alumno registró su asistencia.
-            $table->timestamp('registered_at')->nullable();
+            $table->timestamp('registered_at')
+                  ->nullable();
 
             $table->timestamps();
 
             // Un alumno solo puede tener una asistencia por clase.
-            $table->unique(['class_id', 'user_id']);
+            $table->unique(['class_session_id', 'user_id']);
 
-            $table->timestamps();
         });
     }
 

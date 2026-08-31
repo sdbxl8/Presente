@@ -28,7 +28,8 @@ return new class extends Migration
             $table->time('end_time');
 
             // Estado de la clase: programada, abierta o cerrada.
-            $table->string('status')->default('scheduled');
+            $table->enum('status', ['scheduled','open','closed'])
+                  ->default('scheduled');
 
             $table->timestamps();
         });
