@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="px-5 py-6 sm:px-8 sm:py-8">
-                    <form class="space-y-5" method="POST" action="#">
+                    <form class="space-y-5" method="POST" action="{{ route('register.store') }}">
                         @csrf
 
                         <div class="grid gap-4 sm:grid-cols-2">
@@ -93,4 +93,5 @@
             </div>
         </div>
     </div>
+
 @endsection
