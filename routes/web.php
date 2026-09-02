@@ -18,5 +18,5 @@ Route::get('/register', [RegisterController::class, 'create'])->name('register')
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
 Route::get('/home', function () {
-    return view('home.home');
+    return view('layouts.app');
 })->name('home');

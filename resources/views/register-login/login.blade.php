@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.login-register')
 
 @section('content')
     <div class="min-h-screen bg-slate-100 px-4 py-8 sm:px-6 lg:px-8">
