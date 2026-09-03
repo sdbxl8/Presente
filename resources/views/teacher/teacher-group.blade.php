@@ -106,7 +106,7 @@
                         </button>
                     </div>
 
-                    <form class="mt-6 space-y-5" action="#" method="POST">
+                    <form class="mt-6 space-y-5" action="{{ route('teacher.groups.students', $group) }}" method="POST">
                         @csrf
                         <fieldset class="space-y-2">
                             <legend class="mb-3 text-sm font-medium text-slate-700">Selecciona los alumnos</legend>
@@ -143,24 +143,19 @@
                         </button>
                     </div>
 
-                    <form class="mt-6 space-y-5" action="#" method="POST">
+                    <form class="mt-6 space-y-5" action="{{ route('teacher.groups.subjects', $group) }}" method="POST">
                         @csrf
-                        <div>
-                            <label for="subject_ids-{{ $group->id }}" class="mb-2 block text-sm font-medium text-slate-700">Selecciona una o varias asignaturas</label>
-                            <select id="subject_ids-{{ $group->id }}" name="subject_ids[]" multiple class="min-h-32 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100" onchange="showSelectedSubjects({{ $group->id }})">
-                                @forelse (($subjects ?? $group->subjects ?? collect()) as $subject)
-                                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                                @empty
-                                    <option disabled>No hay asignaturas disponibles</option>
-                                @endforelse
-                            </select>
-                            <p class="mt-2 text-xs text-slate-500">Mantén pulsada la tecla Ctrl o Cmd para elegir varias.</p>
-                        </div>
-
-                        <div id="selected-subjects-{{ $group->id }}" class="hidden rounded-xl border border-sky-100 bg-sky-50 p-3">
-                            <p class="text-xs font-semibold uppercase tracking-wide text-sky-700">Asignaturas seleccionadas</p>
-                            <ul class="mt-2 space-y-1 text-sm text-slate-700"></ul>
-                        </div>
+                        <fieldset class="space-y-2">
+                            <legend class="mb-3 text-sm font-medium text-slate-700">Selecciona las asignaturas</legend>
+                            @forelse (($subjects ?? $group->subjects ?? collect()) as $subject)
+                                <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 transition hover:border-sky-200 hover:bg-sky-50">
+                                    <input type="checkbox" name="subject_ids[]" value="{{ $subject->id }}" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                    <span>{{ $subject->name }}</span>
+                                </label>
+                            @empty
+                                <p class="rounded-xl bg-slate-50 px-3 py-4 text-sm text-slate-500">No hay asignaturas disponibles.</p>
+                            @endforelse
+                        </fieldset>
 
                         <button type="submit" class="w-full min-h-11 rounded-xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-200">
                             Añadir seleccionadas
@@ -208,20 +203,3 @@
     </div>
 @endsection
 
-<script>
-    function showSelectedSubjects(groupId) {
-        const select = document.getElementById(`subject_ids-${groupId}`);
-        const container = document.getElementById(`selected-subjects-${groupId}`);
-        const list = container.querySelector('ul');
-
-        list.innerHTML = '';
-
-        Array.from(select.selectedOptions).forEach((option) => {
-            const item = document.createElement('li');
-            item.textContent = option.text;
-            list.appendChild(item);
-        });
-
-        container.classList.toggle('hidden', select.selectedOptions.length === 0);
-    }
-</script>
