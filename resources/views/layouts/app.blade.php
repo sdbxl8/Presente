@@ -15,14 +15,11 @@
             </div>
 
             <nav class="flex-1 space-y-2 px-4 py-6" aria-label="Navegación principal">
-                <a href="#" class="flex items-center gap-3 rounded-xl bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700">
+                <a href="{{ route('home') }}" class="flex items-center gap-3 rounded-xl bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700">
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
                     Inicio
                 </a>
-                <a href="#" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-sky-700">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-500">M</span>
-                    Menú
-                </a>
+                @include('teacher.teacher-menu')
             </nav>
 
             <div class="border-t border-slate-200 p-4">
@@ -60,14 +57,11 @@
 
         <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur lg:hidden" aria-label="Navegación móvil">
             <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
-                <a href="#" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
+                <a href="{{ route('home') }}" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
                     <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
                     Inicio
                 </a>
-                <a href="#" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-500">M</span>
-                    Menú
-                </a>
+                @include('teacher.teacher-menu')
                 <button type="button" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700" aria-label="Abrir perfil">
                     <span class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600">P</span>
                     Perfil

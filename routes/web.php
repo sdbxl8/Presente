@@ -20,3 +20,6 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/home', function () {
     return view('layouts.app');
 })->name('home');
+
+Route::view('/teacher/groups', 'teacher.teacher-group')->name('teacher.groups');
+
