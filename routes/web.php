@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\GroupController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -21,5 +22,11 @@ Route::get('/home', function () {
     return view('layouts.app');
 })->name('home');
 
-Route::view('/teacher/groups', 'teacher.teacher-group')->name('teacher.groups');
+Route::middleware('auth')->group(function () {
+    Route::get('/teacher/groups', [GroupController::class, 'index'])
+        ->name('teacher.groups');
 
+    Route::post('/teacher/groups', [GroupController::class, 'store'])
+        ->name('teacher.groups.store');
+
+});
