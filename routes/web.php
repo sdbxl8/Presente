@@ -4,9 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
-use App\Models\ClassSession;
-use App\Models\Group;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ClassController;
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -31,16 +30,8 @@ Route::post('/teacher/groups/{group}/students',[GroupController::class, 'addStud
 Route::post('/teacher/groups/{group}/subjects',[GroupController::class, 'addSubjects'])->name('teacher.groups.subjects');
 
 //redirecciones: clases profesor
-Route::get('/teacher/classes', function () {
-    $groups = Group::where('teacher_id', Auth::id())->with('subjects')->get();
-    $classes = ClassSession::whereHas('subject.group', function ($query) {
-        $query->where('teacher_id', Auth::id());
-    })->with('subject.group')->orderBy('date')->orderBy('start_time')->get();
+Route::get('/teacher/classes', [ClassController::class, 'index'])->name('teacher.classes');
 
-    return view('teacher.teacher-class', compact('groups', 'classes'));
-})->name('teacher.classes');
-
-Route::post('/teacher/classes', function () {
-    return redirect()->route('teacher.classes');
-})->name('teacher.classes.store');
+Route::post('/teacher/classes', [ClassController::class, 'store'])->name('teacher.classes.store');
+Route::delete('/teacher/classes/{classSession}', [ClassController::class, 'destroy'])->name('teacher.classes.destroy');
 });

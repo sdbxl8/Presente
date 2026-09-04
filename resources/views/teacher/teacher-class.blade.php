@@ -38,7 +38,8 @@
 							<p class="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">{{ $class->subject->group->name ?? 'Grupo' }}</p>
 							<h3 class="mt-1 truncate text-base font-semibold text-slate-900">{{ $class->subject->name ?? 'Asignatura' }}</h3>
 						</div>
-						<div class="grid grid-cols-2 gap-3 text-sm sm:min-w-64">
+						<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+							<div class="grid grid-cols-2 gap-3 text-sm sm:min-w-64">
 							<div class="rounded-xl bg-slate-50 px-3 py-2">
 								<p class="text-xs text-slate-500">Fecha</p>
 								<p class="mt-1 font-semibold text-slate-700">{{ \Illuminate\Support\Carbon::parse($class->date)->format('d/m/Y') }}</p>
@@ -47,6 +48,14 @@
 								<p class="text-xs text-slate-500">Horario</p>
 								<p class="mt-1 font-semibold text-slate-700">{{ substr($class->start_time, 0, 5) }} - {{ substr($class->end_time, 0, 5) }}</p>
 							</div>
+							</div>
+							<form action="{{ route('teacher.classes.destroy', $class) }}" method="POST" onsubmit="return confirm('¿Quieres borrar esta clase?');">
+								@csrf
+								@method('DELETE')
+								<button type="submit" class="inline-flex min-h-10 w-full items-center justify-center rounded-xl border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100 sm:w-auto" aria-label="Borrar clase">
+									Borrar
+								</button>
+							</form>
 						</div>
 					</div>
 				</article>
