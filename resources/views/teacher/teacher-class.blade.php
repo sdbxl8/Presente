@@ -56,6 +56,9 @@
 									Borrar
 								</button>
 							</form>
+			<button type="button" onclick="document.getElementById('start-class-modal-{{ $class->id }}').classList.remove('hidden')" class="inline-flex min-h-10 w-full items-center justify-center rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200 sm:w-auto">
+				Abrir clase
+			</button>
 						</div>
 					</div>
 				</article>
@@ -67,6 +70,10 @@
 			@endforelse
 		</section>
 	</div>
+
+	@foreach (($classes ?? collect()) as $class)
+		@include('teacher.teacher-class-open', ['classSession' => $class])
+	@endforeach
 
 	<div id="calendar-modal" class="fixed inset-0 z-50 hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="calendar-title">
 		<div class="fixed inset-0 bg-slate-950/40" onclick="document.getElementById('calendar-modal').classList.add('hidden')"></div>

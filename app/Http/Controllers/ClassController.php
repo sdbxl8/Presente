@@ -39,9 +39,28 @@ class ClassController extends Controller
 
             return redirect()->route('teacher.classes');
     }
-    public function destroy(ClassSession $classSession){
-        $classSession->delete();
-        return redirect()->route('teacher.classes');
+
+    public function open(ClassSession $classSession){
+        $classSession->load('subject.group');
+
+        abort_unless(
+            $classSession->subject->group->teacher_id === Auth::id(),403
+        );
+
+        $classSession->update([
+            'status' => 'open',
+        ]);
+
+        return redirect()
+            ->route('teacher.classes')
+            ->with('open_class_id', $classSession->id);
     }
+
+    public function destroy(ClassSession $classSession)
+{
+    $classSession->delete();
+
+    return redirect()->route('teacher.classes');
+}
 
 }

@@ -6,7 +6,6 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ClassController;
 
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -34,4 +33,7 @@ Route::get('/teacher/classes', [ClassController::class, 'index'])->name('teacher
 
 Route::post('/teacher/classes', [ClassController::class, 'store'])->name('teacher.classes.store');
 Route::delete('/teacher/classes/{classSession}', [ClassController::class, 'destroy'])->name('teacher.classes.destroy');
+
+//redirecciones: clase abierta
+Route::patch('/teacher/classes/{classSession}/open',[ClassController::class, 'open'])->name('teacher.classes.open');
 });
