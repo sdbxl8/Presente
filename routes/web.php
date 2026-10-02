@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\AttendanceController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -36,4 +37,14 @@ Route::delete('/teacher/classes/{classSession}', [ClassController::class, 'destr
 
 //redirecciones: clase abierta
 Route::patch('/teacher/classes/{classSession}/open',[ClassController::class, 'open'])->name('teacher.classes.open');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/attendance/{classSession}', [AttendanceController::class, 'show'])
+        ->middleware('signed')
+        ->name('attendance.show');
+
+    Route::post('/attendance/{classSession}', [AttendanceController::class, 'store'])
+        ->middleware('signed')
+        ->name('attendance.store');
+});
 });

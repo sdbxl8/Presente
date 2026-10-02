@@ -41,7 +41,11 @@
 
 					<div id="qr-panel-{{ $classSession->id }}" class="flex min-h-64 items-center justify-center rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50/60 p-6 text-center sm:min-h-72">
                         <div>
-                            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-white text-sm font-bold tracking-wider text-sky-600 shadow-sm ring-1 ring-sky-100">QR</div>
+                            {{-- <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-xl bg-white text-sm font-bold tracking-wider text-sky-600 shadow-sm ring-1 ring-sky-100">QR</div> --}}
+                            <canvas
+                                data-qr-url="{{ $attendanceUrl }}"
+                                aria-label="Código QR para registrar asistencia"
+                            ></canvas>
 							<p id="qr-status-{{ $classSession->id }}" class="mt-4 text-sm font-semibold text-slate-700">Control todavía sin iniciar</p>
 							<p id="countdown-{{ $classSession->id }}" class="mt-1 text-2xl font-bold tabular-nums text-sky-700">10:00</p>
 							<p class="mt-1 text-xs text-slate-500">Los alumnos podrán escanearlo cuando comience el control.</p>

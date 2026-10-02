@@ -20,4 +20,10 @@ class Attendance extends Model
     {
         return $this->hasOne(Justification::class);
     }
+
+    protected $fillable = [
+    'user_id',
+    'status',
+    'registered_at',
+    ];
 }
