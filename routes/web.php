@@ -50,4 +50,27 @@ Route::middleware('auth')->group(function () {
         ->middleware('signed')
         ->name('attendance.store');
 });
+
+//api calendario
+Route::get('/api/classes', function () {
+    $classes = \App\Models\ClassSession::with('subject.group')->get();
+
+    return $classes->map(function ($class) {
+        return [
+            'id' => $class->id,
+            'title' => $class->subject->name,
+            'start' => $class->date . 'T' . $class->start_time,
+            'end' => $class->date . 'T' . $class->end_time,
+            'extendedProps' => [
+                'group' => $class->subject->group->name,
+                'status' => $class->status,
+            ],
+        ];
+    });
+});
+
+//redirecciones: justificantes
+Route::get('/teacher/justifications', function () {
+    return view('teacher.attendance-teacher');
+})->name('teacher.justifications');
 });

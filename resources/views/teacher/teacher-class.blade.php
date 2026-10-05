@@ -14,16 +14,7 @@
 			</button>
 		</div>
 
-		<button type="button" onclick="document.getElementById('calendar-modal').classList.remove('hidden')" class="flex w-full items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-sm transition hover:border-sky-200 hover:bg-sky-50/40 focus:outline-none focus:ring-4 focus:ring-sky-100 sm:px-5">
-			<span class="flex min-w-0 items-center gap-3">
-				<span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sm font-bold text-sky-700">C</span>
-				<span class="min-w-0">
-					<span class="block text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">Agenda</span>
-					<span class="mt-1 block truncate text-base font-semibold text-slate-900">Calendario de clases</span>
-				</span>
-			</span>
-			<span class="shrink-0 text-xl text-slate-400" aria-hidden="true">&rsaquo;</span>
-		</button>
+		@include('layouts.calendar')
 
 		<section class="space-y-3" aria-labelledby="classes-title">
 			<div class="flex items-center justify-between gap-3">
@@ -79,44 +70,6 @@
             : null,
     ])
 	@endforeach
-
-	<div id="calendar-modal" class="fixed inset-0 z-50 hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="calendar-title">
-		<div class="fixed inset-0 bg-slate-950/40" onclick="document.getElementById('calendar-modal').classList.add('hidden')"></div>
-
-		<div class="relative mx-auto flex min-h-full max-w-3xl items-center justify-center">
-			<section class="w-full overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200">
-				<div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-					<div>
-						<p class="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">Agenda</p>
-						<h2 id="calendar-title" class="mt-1 text-xl font-bold text-slate-900">Calendario de clases</h2>
-					</div>
-					<div class="flex items-center gap-2">
-						<button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-lg text-slate-500" aria-label="Mes anterior">&lsaquo;</button>
-						<span class="min-w-28 text-center text-sm font-semibold text-slate-700">Mes actual</span>
-						<button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-lg text-slate-500" aria-label="Mes siguiente">&rsaquo;</button>
-					</div>
-					<button type="button" onclick="document.getElementById('calendar-modal').classList.add('hidden')" class="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-500 transition hover:bg-slate-200 hover:text-slate-800 sm:right-6" aria-label="Cerrar calendario">
-						&times;
-					</button>
-				</div>
-				<div class="p-3 sm:p-6">
-					<div class="grid grid-cols-7 gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200">
-						@foreach (['L', 'M', 'X', 'J', 'V', 'S', 'D'] as $weekday)
-							<div class="bg-slate-50 px-1 py-2 text-center text-[11px] font-semibold uppercase text-slate-500 sm:py-3 sm:text-xs">{{ $weekday }}</div>
-						@endforeach
-						@for ($day = 1; $day <= 35; $day++)
-							<div class="min-h-16 bg-white p-2 sm:min-h-24 sm:p-3">
-								@if ($day <= 31)
-									<span class="text-xs font-medium text-slate-400">{{ $day }}</span>
-								@endif
-							</div>
-						@endfor
-					</div>
-					<p class="mt-3 text-center text-xs text-slate-400">Aquí aparecerán las asignaturas, grupos y horarios de cada clase.</p>
-				</div>
-			</section>
-		</div>
-	</div>
 
 	<div id="create-class-modal" class="fixed inset-0 z-50 hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="create-class-title">
 		<div class="fixed inset-0 bg-slate-950/40" onclick="document.getElementById('create-class-modal').classList.add('hidden')"></div>
