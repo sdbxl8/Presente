@@ -72,7 +72,12 @@
 	</div>
 
 	@foreach (($classes ?? collect()) as $class)
-		@include('teacher.teacher-class-open', ['classSession' => $class])
+		@include('teacher.teacher-class-open', [
+        'classSession' => $class,
+        'attendanceUrl' => session('open_class_id') == $class->id
+            ? session('attendance_url')
+            : null,
+    ])
 	@endforeach
 
 	<div id="calendar-modal" class="fixed inset-0 z-50 hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="calendar-title">

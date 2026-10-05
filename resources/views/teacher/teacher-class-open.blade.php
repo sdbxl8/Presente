@@ -80,7 +80,12 @@
 					<form action="{{ route('teacher.classes.open', $classSession) }}" method="POST">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200">Comenzar control</button>
+                        <button type="submit" id="start-control-{{ $classSession->id }}" class="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200">Comenzar control</button>
+                    </form>
+                    <form action="{{ route('teacher.classes.close', $classSession) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit"class="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700 focus:outline-none focus:ring-4 focus:ring-rose-200">Cerrar clase</button>
                     </form>
                 </div>
             </div>
@@ -114,4 +119,41 @@
 			}
 		}, 1000);
 	}
+
+    function startAttendanceControl(classId) {
+        const status = document.getElementById(`qr-status-${classId}`);
+        const countdown = document.getElementById(`countdown-${classId}`);
+        const closeButton = document.querySelector(`#start-class-modal-${classId} button[type="submit"]`);
+
+        let remainingSeconds = 600;
+
+        status.textContent = 'Control activo';
+        status.classList.add('text-emerald-700');
+
+        const timer = window.setInterval(() => {
+            remainingSeconds -= 1;
+
+            const minutes = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+            const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
+
+            countdown.textContent = `${minutes}:${seconds}`;
+
+            if (remainingSeconds <= 0) {
+                window.clearInterval(timer);
+                status.textContent = 'Control finalizado';
+                countdown.textContent = '00:00';
+            }
+        }, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modals = document.querySelectorAll('[id^="start-class-modal-"]');
+
+        modals.forEach((modal) => {
+            if (!modal.classList.contains('hidden')) {
+                const classId = modal.id.replace('start-class-modal-', '');
+                startAttendanceControl(classId);
+            }
+        });
+    });
 </script>

@@ -37,7 +37,10 @@ Route::delete('/teacher/classes/{classSession}', [ClassController::class, 'destr
 
 //redirecciones: clase abierta
 Route::patch('/teacher/classes/{classSession}/open',[ClassController::class, 'open'])->name('teacher.classes.open');
+Route::patch('/teacher/classes/{classSession}/close', [ClassController::class, 'close'])
+    ->name('teacher.classes.close');
 
+//redirecciones: asistencia
 Route::middleware('auth')->group(function () {
     Route::get('/attendance/{classSession}', [AttendanceController::class, 'show'])
         ->middleware('signed')
