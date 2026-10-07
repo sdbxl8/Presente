@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\JustificationController;
+use App\Http\Controllers\TeacherDashboardController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -21,6 +22,13 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/home', function () {
     return view('layouts.app');
 })->name('home');
+
+//redirecciones: dashboard de profesor
+Route::get('/', [TeacherDashboardController::class, 'dashboard'])->name('home');
+Route::get('/home', [TeacherDashboardController::class, 'dashboard'])->name('home');
+
+Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'dashboard'])
+    ->name('teacher.dashboard');
 
 //redirecciones: grupos profesor
 Route::middleware('auth')->group(function () {
@@ -83,3 +91,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/teacher/justifications/{justification}/reject', [JustificationController::class, 'reject'])
         ->name('teacher.justifications.reject');
 });
+

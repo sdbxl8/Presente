@@ -33,12 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: [dayGridPlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev',
             center: 'title',
-            right: ''
+            right: 'next'
         },
-        height: 'auto',
         locale: 'es',
+        height: 'auto',
+        contentHeight: 360,
+        fixedWeekCount: false,
         events: '/api/classes',
         eventClick(info) {
             console.log(info.event.extendedProps);
