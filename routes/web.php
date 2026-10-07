@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\JustificationController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -39,6 +40,8 @@ Route::delete('/teacher/classes/{classSession}', [ClassController::class, 'destr
 Route::patch('/teacher/classes/{classSession}/open',[ClassController::class, 'open'])->name('teacher.classes.open');
 Route::patch('/teacher/classes/{classSession}/close', [ClassController::class, 'close'])
     ->name('teacher.classes.close');
+});
+
 
 //redirecciones: asistencia
 Route::middleware('auth')->group(function () {
@@ -70,7 +73,13 @@ Route::get('/api/classes', function () {
 });
 
 //redirecciones: justificantes
-Route::get('/teacher/justifications', function () {
-    return view('teacher.attendance-teacher');
-})->name('teacher.justifications');
+Route::middleware('auth')->group(function () {
+    Route::get('/teacher/justifications', [JustificationController::class, 'index'])
+        ->name('teacher.justifications');
+
+    Route::patch('/teacher/justifications/{justification}/approve', [JustificationController::class, 'approve'])
+        ->name('teacher.justifications.approve');
+
+    Route::patch('/teacher/justifications/{justification}/reject', [JustificationController::class, 'reject'])
+        ->name('teacher.justifications.reject');
 });

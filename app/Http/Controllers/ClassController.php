@@ -43,39 +43,6 @@ class ClassController extends Controller
             return redirect()->route('teacher.classes');
     }
 
-    // public function open(ClassSession $classSession){
-
-    //     $classSession->load('subject.group');
-
-    //     abort_unless(
-    //         $classSession->subject->group->teacher_id === Auth::id(),403
-    //     );
-    //     $expiresAt = Carbon::parse(
-    //         $classSession->date . ' ' . $classSession->end_time
-    //     );
-
-    //       abort_unless($expiresAt->isFuture(), 409);
-
-    //     $attendanceUrl = URL::temporarySignedRoute(
-    //         'attendance.show',
-    //     $expiresAt,
-    //         [
-    //             'classSession' => $classSession->id,
-    //             'nonce' => Str::random(32),
-    //         ]
-    //     );
-
-    //     $classSession->update([
-    //         'status' => 'open',
-    //     ]);
-
-    //     return redirect()
-    //         ->route('teacher.classes')
-    //         ->with('open_class_id', $classSession->id)
-    //         ->with('attendance_url', $attendanceUrl);
-
-    // }
-
     public function open(ClassSession $classSession)
 {
     $classSession->load('subject.group');
@@ -116,6 +83,18 @@ class ClassController extends Controller
         $classSession->subject->group->teacher_id === Auth::id(),
         403
     );
+
+    $students = $classSession->subject->group->students()->get();
+
+    foreach ($students as $student) {
+        $classSession->attendances()->firstOrCreate(
+            ['user_id' => $student->id],
+            [
+                'status' => 'absent',
+                'registered_at' => now(),
+            ]
+        );
+    }
 
     $classSession->update([
         'status' => 'closed',

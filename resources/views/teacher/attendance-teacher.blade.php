@@ -83,12 +83,17 @@
 						</div>
 
 						<div class="grid grid-cols-1 gap-2 border-t border-slate-100 pt-4 sm:grid-cols-2 sm:justify-end">
-							<button type="button" data-justification-action="reject" data-justification-id="{{ $justification->id }}" class="inline-flex min-h-11 items-center justify-center rounded-xl border border-rose-200 px-4 py-2.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100">
-								Denegar justificante
-							</button>
-							<button type="button" data-justification-action="approve" data-justification-id="{{ $justification->id }}" class="inline-flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200">
-								Aceptar justificante
-							</button>
+							<form action="{{ route('teacher.justifications.reject', $justification) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-rose-200 px-4 py-2.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100">Denegar justificante</button>
+                            </form>
+
+							<<form action="{{ route('teacher.justifications.approve', $justification) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-200">Aceptar justificante</button>
+                            </form>
 						</div>
 					</div>
 				</article>
