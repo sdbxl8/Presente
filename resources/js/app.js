@@ -24,6 +24,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarEl = document.getElementById('teacher-calendar');
     const modal = document.getElementById('calendar-modal');
     const openButton = document.getElementById('open-calendar');
+    const dateElement = document.getElementById('current-date');
+    const timeElement = document.getElementById('current-time');
+
+    const updateDateTime = () => {
+        const now = new Date();
+
+        if (dateElement) {
+            dateElement.textContent = now.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        if (timeElement) {
+            timeElement.textContent = now.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
+    };
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
 
     if (!calendarEl) {
         return;
