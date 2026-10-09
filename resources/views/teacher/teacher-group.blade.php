@@ -143,22 +143,14 @@
                         </button>
                     </div>
 
-                    <form class="mt-6 space-y-5" action="{{ route('teacher.groups.subjects', $group) }}" method="POST">
-                        @csrf
-                        <fieldset class="space-y-2">
-                            <legend class="mb-3 text-sm font-medium text-slate-700">Selecciona las asignaturas</legend>
-                            @forelse (($subjects ?? $group->subjects ?? collect()) as $subject)
-                                <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 transition hover:border-sky-200 hover:bg-sky-50">
-                                    <input type="checkbox" name="subject_ids[]" value="{{ $subject->id }}" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                    <span>{{ $subject->name }}</span>
-                                </label>
-                            @empty
-                                <p class="rounded-xl bg-slate-50 px-3 py-4 text-sm text-slate-500">No hay asignaturas disponibles.</p>
-                            @endforelse
-                        </fieldset>
-
+                    <form class="mt-6 space-y-5" action="{{ route('teacher.groups.subjects.store', $group) }}" method="POST">
+                    @csrf
+                        <div>
+                            <label for="subject-name-{{ $group->id }}"class="mb-2 block text-sm font-medium text-slate-700">Nombre de la asignatura</label>
+                            <input id="subject-name-{{ $group->id }}" name="name" type="text" maxlength="255" required placeholder="Ejemplo: Matemáticas" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100">
+                        </div>
                         <button type="submit" class="w-full min-h-11 rounded-xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-200">
-                            Añadir seleccionadas
+                            Crear asignatura
                         </button>
                     </form>
                 </section>

@@ -46,6 +46,23 @@ class GroupController extends Controller
 
     return redirect()->route('teacher.groups');
     }
+
+    public function storeSubject(Request $request, Group $group)
+{
+    abort_unless($group->teacher_id === Auth::id(), 403);
+
+    $data = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+    ]);
+
+    Subject::create([
+        'name' => $data['name'],
+        'group_id' => $group->id,
+    ]);
+
+    return redirect()->route('teacher.groups');
+}
+
     public function addSubjects(Request $request, Group $group){
     $data = $request->validate([
         'subject_ids' => ['required', 'array'],

@@ -32,8 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (dateElement) {
             dateElement.textContent = now.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: '2-digit',
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
                 year: 'numeric'
             });
         }
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Actualiza la fecha y hora cada segundo
     updateDateTime();
     setInterval(updateDateTime, 1000);
 

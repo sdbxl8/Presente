@@ -35,13 +35,15 @@
                 <a href="{{ url('/') }}" class="text-xl font-bold tracking-tight text-sky-700 lg:hidden">Presente</a>
 
                 <div class="hidden lg:block">
-                    <h1 class="text-lg font-semibold text-slate-800">Hola, <span class="font-bold text-2xl text-sky-700">{{ auth()->user()->name ?? 'Profesor' }}</span></h1>
+                    <h1 class="text-lg uppercase font-semibold text-slate-800">Hola,
+                        <span class="font-bold text-2xl text-sky-700">{{ auth()->user()->name ?? 'Profesor' }}</span>
+                    </h1>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <div class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm">
                         <span class="hidden sm:inline" id="current-date">{{ now()->format('d/m/Y') }}</span>
-                        <span class="font-semibold text-sky-700" id="current-time">{{ now()->format('H:i') }}</span>
+                        <span class="font-semibold text-sky-700 " id="current-time">{{ now()->format('H:i') }}</span>
                     </div>
 
                     <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-600 transition hover:bg-sky-50 hover:text-sky-700 lg:hidden" aria-label="Abrir perfil">

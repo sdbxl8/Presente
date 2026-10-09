@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
@@ -10,7 +11,9 @@ use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\TeacherDashboardController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return Auth::check()
+        ? redirect()->route('home')
+        : redirect()->route('login');
 });
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
@@ -19,16 +22,14 @@ Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 Route::get('/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-Route::get('/home', function () {
-    return view('layouts.app');
-})->name('home');
+//redirecciones: interfaz de inicio profesor
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [TeacherDashboardController::class, 'dashboard'])
+        ->name('home');
 
-//redirecciones: dashboard de profesor
-Route::get('/', [TeacherDashboardController::class, 'dashboard'])->name('home');
-Route::get('/home', [TeacherDashboardController::class, 'dashboard'])->name('home');
-
-Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'dashboard'])
-    ->name('teacher.dashboard');
+    Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'dashboard'])
+        ->name('teacher.dashboard');
+});
 
 //redirecciones: grupos profesor
 Route::middleware('auth')->group(function () {
@@ -36,7 +37,7 @@ Route::get('/teacher/groups', [GroupController::class, 'index'])->name('teacher.
 
 Route::post('/teacher/groups', [GroupController::class, 'store'])->name('teacher.groups.store');
 Route::post('/teacher/groups/{group}/students',[GroupController::class, 'addStudents'])->name('teacher.groups.students');
-Route::post('/teacher/groups/{group}/subjects',[GroupController::class, 'addSubjects'])->name('teacher.groups.subjects');
+Route::post('/teacher/groups/{group}/subjects', [GroupController::class, 'storeSubject'])->name('teacher.groups.subjects.store');
 
 //redirecciones: clases profesor
 Route::get('/teacher/classes', [ClassController::class, 'index'])->name('teacher.classes');
