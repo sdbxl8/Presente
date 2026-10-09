@@ -33,7 +33,9 @@ class GroupController extends Controller
     }
 
     public function addStudents(Request $request, Group $group){
-    $data = $request->validate([
+
+        abort_unless((int) $group->teacher_id === (int) Auth::id(),403);
+        $data = $request->validate([
         'student_ids' => ['required', 'array'],
         'student_ids.*' => ['exists:users,id'],
     ]);

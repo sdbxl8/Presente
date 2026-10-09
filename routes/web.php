@@ -23,7 +23,7 @@ Route::get('/register', [RegisterController::class, 'create'])->name('register')
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
 //redirecciones: interfaz de inicio profesor
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/home', [TeacherDashboardController::class, 'dashboard'])
         ->name('home');
 
@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
 });
 
 //redirecciones: grupos profesor
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:teacher'])->group(function () {
 Route::get('/teacher/groups', [GroupController::class, 'index'])->name('teacher.groups');
 
 Route::post('/teacher/groups', [GroupController::class, 'store'])->name('teacher.groups.store');
@@ -53,7 +53,7 @@ Route::patch('/teacher/classes/{classSession}/close', [ClassController::class, '
 
 
 //redirecciones: asistencia
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/attendance/{classSession}', [AttendanceController::class, 'show'])
         ->middleware('signed')
         ->name('attendance.show');
@@ -82,7 +82,7 @@ Route::get('/api/classes', function () {
 });
 
 //redirecciones: justificantes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/justifications', [JustificationController::class, 'index'])
         ->name('teacher.justifications');
 

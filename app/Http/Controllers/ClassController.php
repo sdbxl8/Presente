@@ -32,6 +32,14 @@ class ClassController extends Controller
                'end_time' => ['required']
             ]);
 
+            $group = Group::whereKey($data['group_id'])
+                ->where('teacher_id', Auth::id())
+                ->firstOrFail();
+
+            $subject = Subject::whereKey($data['subject_id'])
+                ->where('group_id', $group->id)
+                ->firstOrFail();
+
             ClassSession::create([
                 'subject_id' => $data['subject_id'],
                 'date' => $data['date'],
@@ -105,6 +113,10 @@ class ClassController extends Controller
 
     public function destroy(ClassSession $classSession)
 {
+    $classSession->load('subject.group');
+
+    abort_unless((int) $classSession->subject->group->teacher_id === (int) Auth::id(),403);
+
     $classSession->delete();
 
     return redirect()->route('teacher.classes');
