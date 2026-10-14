@@ -15,4 +15,12 @@ class ClassSession extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    protected $fillable = [
+        'subject_id',
+        'date',
+        'start_time',
+        'end_time',
+        'status',
+    ];
 }

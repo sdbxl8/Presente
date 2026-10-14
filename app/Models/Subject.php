@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Group;
 
 class Subject extends Model
 {
@@ -15,4 +16,8 @@ class Subject extends Model
     {
         return $this->hasMany(ClassSession::class);
     }
+    protected $fillable = [
+        'name',
+        'group_id',
+    ];
 }

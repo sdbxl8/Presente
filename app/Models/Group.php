@@ -20,4 +20,8 @@ class Group extends Model
     {
         return $this->hasMany(Subject::class);
     }
+    protected $fillable= [
+        'name',
+        'teacher_id'
+    ];
 }

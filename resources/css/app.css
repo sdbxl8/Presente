@@ -7,3 +7,68 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+#teacher-calendar .fc {
+    @apply overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900;
+}
+
+#teacher-calendar .fc-toolbar {
+    @apply mb-2 flex-wrap gap-2 px-1 pt-0;
+}
+
+#teacher-calendar .fc-toolbar-title {
+    @apply text-sm font-bold text-slate-900;
+}
+
+#teacher-calendar .fc-left,
+#teacher-calendar .fc-right {
+    @apply flex items-center;
+}
+
+#teacher-calendar .fc-center {
+    @apply flex flex-1 justify-center;
+}
+
+#teacher-calendar .fc-button {
+    @apply h-8 rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-800 shadow-none;
+}
+
+#teacher-calendar .fc-button:hover,
+#teacher-calendar .fc-button:focus {
+    @apply border-sky-300 bg-sky-50 text-sky-800 shadow-none;
+}
+
+#teacher-calendar .fc-col-header-cell {
+    @apply bg-slate-50 font-semibold text-slate-600;
+}
+
+#teacher-calendar .fc-daygrid-day-number {
+    @apply p-2 font-semibold text-slate-700;
+}
+
+#teacher-calendar .fc-daygrid-day:hover {
+    @apply bg-slate-50;
+}
+
+#teacher-calendar .fc-event {
+    @apply rounded-lg border-0 bg-sky-600 px-1 py-0.5 font-medium text-white;
+}
+
+#teacher-calendar .fc-scroller,
+#teacher-calendar .fc-view-harness {
+    overflow: visible !important;
+}
+
+#teacher-calendar .fc-daygrid-day.fc-day-today {
+    @apply bg-sky-50;
+}
+
+@media (max-width: 640px) {
+    #teacher-calendar .fc-toolbar {
+        @apply flex-col items-stretch;
+    }
+
+    #teacher-calendar .fc-toolbar-chunk {
+        @apply flex w-full justify-center;
+    }
+}

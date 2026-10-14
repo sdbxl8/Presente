@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('groups', function (Blueprint $table) {
+
             $table->id();
 
             // Profesor responsable del grupo.
