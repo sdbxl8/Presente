@@ -68,9 +68,6 @@
                         <div class="space-y-3">
                             <div class="flex items-center justify-between gap-3">
                                 <h3 class="text-sm font-semibold text-slate-800">Asignaturas</h3>
-                                <button type="button" onclick="document.getElementById('add-subject-modal-{{ $group->id }}').classList.remove('hidden')" class="inline-flex min-h-9 items-center justify-center rounded-lg border border-sky-200 px-3 py-2 text-xs font-semibold text-sky-700 transition hover:bg-sky-50 focus:outline-none focus:ring-4 focus:ring-sky-100">
-                                    Añadir asignatura
-                                </button>
                             </div>
                             <ul class="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
                                 @forelse ($group->subjects as $subject)
@@ -128,34 +125,6 @@
             </div>
         </div>
 
-        <div id="add-subject-modal-{{ $group->id }}" class="fixed inset-0 z-[60] hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="add-subject-title-{{ $group->id }}">
-            <div class="fixed inset-0 bg-slate-950/40" onclick="document.getElementById('add-subject-modal-{{ $group->id }}').classList.add('hidden')"></div>
-
-            <div class="relative mx-auto flex min-h-full max-w-md items-center justify-center">
-                <section class="w-full rounded-2xl bg-white p-5 shadow-2xl ring-1 ring-slate-200 sm:p-6">
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-sky-700">{{ $group->name }}</p>
-                            <h2 id="add-subject-title-{{ $group->id }}" class="mt-2 text-xl font-bold text-slate-900">Añadir asignaturas</h2>
-                        </div>
-                        <button type="button" onclick="document.getElementById('add-subject-modal-{{ $group->id }}').classList.add('hidden')" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-lg text-slate-500 transition hover:bg-slate-200 hover:text-slate-800" aria-label="Cerrar ventana">
-                            &times;
-                        </button>
-                    </div>
-
-                    <form class="mt-6 space-y-5" action="{{ route('teacher.groups.subjects.store', $group) }}" method="POST">
-                    @csrf
-                        <div>
-                            <label for="subject-name-{{ $group->id }}"class="mb-2 block text-sm font-medium text-slate-700">Nombre de la asignatura</label>
-                            <input id="subject-name-{{ $group->id }}" name="name" type="text" maxlength="255" required placeholder="Ejemplo: Matemáticas" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100">
-                        </div>
-                        <button type="submit" class="w-full min-h-11 rounded-xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-200">
-                            Crear asignatura
-                        </button>
-                    </form>
-                </section>
-            </div>
-        </div>
     @endforeach
 
     <div id="create-group-modal" class="fixed inset-0 z-50 hidden overflow-y-auto px-4 py-8 sm:px-6" role="dialog" aria-modal="true" aria-labelledby="create-group-title">

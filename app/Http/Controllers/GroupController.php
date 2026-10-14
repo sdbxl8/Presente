@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\Subject;
@@ -19,18 +20,33 @@ class GroupController extends Controller
         return view('teacher.teacher-group', compact('groups', 'students'));
     }
 
-    public function store(Request $request){
-        $data = $request->validate([
-            'name'=>['required','string', 'max:25']
-        ]);
+    public function store(Request $request)
+{
+    $data = $request->validate([
+        'name' => ['required', 'string', 'max:25'],
+    ]);
 
-        Group::create([
-            'name'=>$data['name'],
-            'teacher_id'=>Auth::id()
-        ]);
+    $teacher = Auth::user();
 
-        return redirect()->route('teacher.groups');
+    if (blank($teacher->subject_name)) {
+        return back()->withErrors([
+            'subject_name' => 'Tu cuenta todavía no tiene una asignatura asignada.',
+        ]);
     }
+
+    DB::transaction(function () use ($teacher, $data) {
+        $group = Group::create([
+            'name' => $data['name'],
+            'teacher_id' => $teacher->id,
+        ]);
+
+        $group->subjects()->create([
+            'name' => $teacher->subject_name,
+        ]);
+    });
+
+    return redirect()->route('teacher.groups');
+}
 
     public function addStudents(Request $request, Group $group){
 
@@ -49,33 +65,4 @@ class GroupController extends Controller
     return redirect()->route('teacher.groups');
     }
 
-    public function storeSubject(Request $request, Group $group)
-{
-    abort_unless($group->teacher_id === Auth::id(), 403);
-
-    $data = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-    ]);
-
-    Subject::create([
-        'name' => $data['name'],
-        'group_id' => $group->id,
-    ]);
-
-    return redirect()->route('teacher.groups');
-}
-
-    public function addSubjects(Request $request, Group $group){
-    $data = $request->validate([
-        'subject_ids' => ['required', 'array'],
-        'subject_ids.*' => ['exists:subjects,id'],
-    ]);
-
-    Subject::whereIn('id', $data['subject_ids'])
-        ->update([
-            'group_id' => $group->id,
-        ]);
-
-    return redirect()->route('teacher.groups');
-    }
 }

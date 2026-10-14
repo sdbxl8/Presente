@@ -76,6 +76,18 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="subject_name" class="mb-2 block text-sm font-medium text-slate-700">Asignatura del profesor</label>
+                            <input
+                                id="subject_name"
+                                name="subject_name"
+                                type="text"
+                                maxlength="100"
+                                placeholder="Ejemplo: Programación"
+                                class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100"
+                            >
+                        </div>
+
                         <button
                             type="submit"
                             class="w-full rounded-xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-200"
