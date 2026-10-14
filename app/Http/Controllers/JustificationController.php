@@ -30,7 +30,7 @@ class JustificationController extends Controller
     );
 
     $justification->update([
-        'status' => 'accepted',
+        'status' => 'approved',
     ]);
 
     $justification->attendance()->update([

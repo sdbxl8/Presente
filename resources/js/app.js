@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 hour12: false
             });
         }
+
+
     };
 
     // Actualiza la fecha y hora cada segundo
@@ -81,3 +83,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calendar.render();
 });
+
+
