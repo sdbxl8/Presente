@@ -15,11 +15,15 @@
             </div>
 
             <nav class="flex-1 space-y-2 px-4 py-6" aria-label="Navegación principal">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 rounded-xl bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
-                    Inicio
-                </a>
-                @include('teacher.teacher-menu')
+                @if (auth()->user()->role === 'teacher')
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 rounded-xl bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-700">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
+                        Inicio
+                    </a>
+                    @include('teacher.teacher-menu')
+                @else
+                    @include('student.student-menu')
+                @endif
             </nav>
 
             <div class="border-t border-slate-200 p-4">
@@ -65,11 +69,15 @@
 
         <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur lg:hidden" aria-label="Navegación móvil">
             <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
-                <a href="{{ route('home') }}" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
-                    Inicio
-                </a>
-                @include('teacher.teacher-menu')
+                @if (auth()->user()->role === 'teacher')
+                    <a href="{{ route('home') }}" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
+                        Inicio
+                    </a>
+                    @include('teacher.teacher-menu')
+                @else
+                    @include('student.student-menu')
+                @endif
                 @include('layouts.profile-menu', [
                     'triggerClass' => 'flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700',
                     'avatarSizeClass' => 'h-6 w-6',
