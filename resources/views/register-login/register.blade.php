@@ -69,23 +69,30 @@
                                 id="role"
                                 name="role"
                                 class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100"
+                                required...
                             >
                                 <option value="">Selecciona un rol</option>
-                                <option value="teacher">Profesor</option>
-                                <option value="student">Alumno</option>
+                                <option value="teacher" @selected(old('role') === 'teacher')>Profesor</option>
+                                <option value="student" @selected(old('role') === 'student')>Alumno</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label for="subject_name" class="mb-2 block text-sm font-medium text-slate-700">Asignatura del profesor</label>
+                        <div id="teacher-subject-field" class="{{ old('role') === 'teacher' ? '' : 'hidden' }}">
+                            <label for="subject_name" class="mb-2 block text-sm font-medium text-slate-700">
+                                Asignatura del profesor
+                            </label>
                             <input
                                 id="subject_name"
                                 name="subject_name"
                                 type="text"
                                 maxlength="100"
+                                value="{{ old('subject_name') }}"
                                 placeholder="Ejemplo: Programación"
                                 class="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100"
                             >
+                            @error('subject_name')
+                                <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <button
@@ -107,3 +114,25 @@
     </div>
 
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const roleField = document.getElementById('role');
+    const subjectField = document.getElementById('subject_name');
+    const subjectContainer = document.getElementById('teacher-subject-field');
+
+    const updateSubjectField = () => {
+        const isTeacher = roleField.value === 'teacher';
+
+        subjectContainer.classList.toggle('hidden', !isTeacher);
+        subjectField.required = isTeacher;
+
+        if (!isTeacher) {
+            subjectField.value = '';
+        }
+    };
+
+    roleField.addEventListener('change', updateSubjectField);
+    updateSubjectField();
+});
+</script>

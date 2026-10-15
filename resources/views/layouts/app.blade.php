@@ -23,10 +23,12 @@
             </nav>
 
             <div class="border-t border-slate-200 p-4">
-                <button type="button" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-sky-700" aria-label="Abrir perfil">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600">P</span>
-                    <span>Perfil</span>
-                </button>
+                @include('layouts.profile-menu', [
+                    'triggerClass' => 'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-sky-700',
+                    'avatarSizeClass' => 'h-9 w-9',
+                    'showLabel' => true,
+                    'menuPosition' => 'bottom-full left-0 mb-2 w-full',
+                ])
             </div>
         </aside>
 
@@ -46,9 +48,13 @@
                         <span class="font-semibold text-sky-700 " id="current-time">{{ now()->format('H:i') }}</span>
                     </div>
 
-                    <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-600 transition hover:bg-sky-50 hover:text-sky-700 lg:hidden" aria-label="Abrir perfil">
-                        P
-                    </button>
+                    <div class="lg:hidden">
+                        @include('layouts.profile-menu', [
+                            'triggerClass' => 'inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-600 transition hover:bg-sky-50 hover:text-sky-700',
+                            'avatarSizeClass' => 'h-10 w-10',
+                            'menuPosition' => 'right-0 top-full mt-2 w-52',
+                        ])
+                    </div>
                 </div>
             </div>
         </header>
@@ -64,10 +70,12 @@
                     Inicio
                 </a>
                 @include('teacher.teacher-menu')
-                <button type="button" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700" aria-label="Abrir perfil">
-                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600">P</span>
-                    Perfil
-                </button>
+                @include('layouts.profile-menu', [
+                    'triggerClass' => 'flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-xl text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700',
+                    'avatarSizeClass' => 'h-6 w-6',
+                    'showLabel' => true,
+                    'menuPosition' => 'bottom-full right-0 mb-2 w-52',
+                ])
             </div>
         </nav>
     </div>

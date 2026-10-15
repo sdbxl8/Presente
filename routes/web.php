@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return Auth::check()
@@ -92,3 +94,22 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
         ->name('teacher.justifications.reject');
 });
 
+//redirecciones: perfil
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    })->name('logout');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])
+        ->name('profile.photo.update');
+});
