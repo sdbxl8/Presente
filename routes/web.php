@@ -12,10 +12,16 @@ use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\StudentDashboardController;
+
 Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('home')
-        : redirect()->route('login');
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+//redireccion segun el rol de usuario al iniciar sesion
+    return Auth::user()->role === 'student'
+        ? redirect()->route('student.home')
+        : redirect()->route('home');
 });
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
@@ -31,6 +37,12 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
 
     Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'dashboard'])
         ->name('teacher.dashboard');
+});
+
+//redirecciones: interfaz de inicio estudiante
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/home', [StudentDashboardController::class, 'dashboard'])
+        ->name('student.home');
 });
 
 //redirecciones: grupos profesor
