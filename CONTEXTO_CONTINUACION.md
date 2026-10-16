@@ -11,6 +11,16 @@ El sistema es una demo Laravel para gestionar clases, asistencia por QR y justif
 
 Se decidió conservar el esquema existente y crear un registro `Subject` por grupo. Si el profesor imparte Programación, los grupos que cree tendrán su propia fila de asignatura llamada Programación. No se comparte el mismo registro entre grupos.
 
+## Forma de trabajar acordada
+
+- El usuario prefiere avanzar guiado y por pasos, con explicaciones de qué archivo tocar, qué bloque cambiar y por qué.
+- No editar archivos salvo que el usuario lo pida explícitamente. Cuando autoriza cambios, respetar el alcance concreto y no ampliar a refactors no solicitados.
+- Mantener soluciones simples, apropiadas para una demo de portfolio, pero con comprobaciones esenciales de autorización y validación.
+- No instalar Laravel Boost: el usuario lo rechazó explícitamente y pidió continuar sin Boost.
+- Antes de sugerir comandos que borran datos, avisar de su efecto. Para la base de datos de demo el usuario confirmó que puede empezar desde cero porque los datos son falsos.
+- Responder en español y validar el archivo/comportamiento afectado cuando se hagan cambios.
+- `npm run dev` solo inicia Vite; las rutas Laravel se prueban mediante el servidor de Laravel/Laragon.
+
 ## Cambios aplicados y verificados
 
 - `database/migrations/0001_01_01_000000_create_users_table.php` incluye `subject_name` nullable.
@@ -25,54 +35,48 @@ Se decidió conservar el esquema existente y crear un registro `Subject` por gru
 - `resources/views/teacher/teacher-group.blade.php` ya no contiene el botón ni el modal “Añadir asignatura”; conserva la lista para mostrar las asignaturas ya asociadas al grupo.
 - La página de grupos conserva el modal para añadir alumnos.
 - `ClassController::store()` comprueba que el grupo pertenece al profesor y que la asignatura pertenece al grupo elegido. Así se evita enviar un `subject_id` de otro grupo.
+- El seeder asigna Programación a Mario y crea esa asignatura para el grupo de ejemplo.
+- `StudentDashboardController` y `resources/views/student/student-dashboard.blade.php` existen como inicio inicial del alumno.
+- `/student/home` existe con `auth` y `role:student`; `/home` sigue siendo el inicio de profesor con `role:teacher`.
+- La ruta raíz y `LoginController` redirigen al inicio adecuado según el rol.
+- El layout compartido muestra el menú de profesor o alumno según el rol. El menú alumno conserva Inicio y muestra Escanear, Mis clases y Justificaciones como opciones deshabilitadas hasta que se implementen esas secciones.
+- El parcial `layouts/profile-menu` ofrece Mi perfil y Cerrar sesión. Logout usa POST, CSRF e invalida la sesión.
+- `ProfileController` permite leer y actualizar el perfil; la asignatura es editable para profesores y se replica a los `subjects` de sus grupos. La asignatura de un alumno se muestra desde su grupo y no se edita en el perfil.
+- El perfil permite subir una foto local mediante `profile.photo.update`; `User` incluye `photo` en `Fillable`, la foto se guarda en el disco `public` y `php artisan storage:link` se ejecutó correctamente.
+- El layout muestra la foto del usuario en los avatares de escritorio y móvil, con la letra `P` como fallback.
 
 ## Estado Git observado
 
-- Rama actual: `develop`.
-- Seguimiento remoto observado: `origin/develop`.
-- `git push -u origin develop` se había completado anteriormente.
-- En la última comprobación había cambios locales sin commit en:
-  - `app/Http/Controllers/GroupController.php`
-  - `app/Http/Controllers/RegisterController.php`
-  - `app/Models/User.php`
-  - `database/migrations/0001_01_01_000000_create_users_table.php`
-  - `database/seeders/DatabaseSeeder.php`
-  - `resources/views/register-login/register.blade.php`
-  - `resources/views/teacher/teacher-group.blade.php`
-  - `routes/web.php`
+- La última rama observada anteriormente fue `develop`, con upstream `origin/develop`; `git push` se había completado.
+- Después se ejecutó `git init`; no hay una comprobación posterior fiable del estado actual ni de la rama.
+- Antes de continuar, ejecutar `git status --short --branch` y conservar los cambios de usuario. No resetear ni descartar archivos.
 
-Volver a ejecutar `git status` antes de continuar: el estado puede haber cambiado después de crear este documento. Los cambios actuales no se deben descartar.
+## Base de datos y migraciones
 
-## Bloqueo inmediato: migración duplicada de `sessions`
+Inicialmente `php artisan migrate:fresh --seed` falló porque la tabla `sessions` se creaba en dos migraciones: la inicial de usuarios y `2026_08_31_162150_create_sessions_table.php`. No son las sesiones de clase (`class_sessions`).
 
-La última ejecución de `php artisan migrate:fresh --seed` terminó con error `SQLSTATE[42S01]`, indicando que la tabla `sessions` ya existe.
+El usuario comentó los bloques de creación de `sessions` y `password_reset_tokens` en `0001_01_01_000000_create_users_table.php`, conservando la migración dedicada de `sessions`. Después `php artisan migrate:fresh --seed` terminó con código 0.
 
-Causa confirmada: se intenta crear la tabla con nombre `sessions` en dos migraciones distintas:
+Consecuencias:
 
-1. `database/migrations/0001_01_01_000000_create_users_table.php`
-2. `database/migrations/2026_08_31_162150_create_sessions_table.php`
+- `sessions` la crea `2026_08_31_162150_create_sessions_table.php` y debe mantenerse para el driver de sesiones de Laravel.
+- `class_sessions` guarda clases planificadas y no se modificó por este error.
+- `password_reset_tokens` no se crea actualmente desde la migración base. No bloquea el flujo actual, pero se necesitará una migración si se implementa recuperación de contraseña.
+- El seed de la base de datos se ejecutó correctamente tras resolver el duplicado.
 
-No son las sesiones de clase (`class_sessions`). La tabla `sessions` es para las sesiones de autenticación web de Laravel; `class_sessions` guarda las clases planificadas y no debe modificarse por este error.
+La base contiene datos falsos; el usuario confirmó que acepta reconstruirla con `migrate:fresh --seed` si es necesario. Recordar que este comando borra todas las tablas/datos.
 
-### Próxima acción
+## Validación pendiente
 
-1. En `0001_01_01_000000_create_users_table.php`, quitar de `up()` el bloque `Schema::create('sessions', ...)`.
-2. En el `down()` de esa migración, quitar `Schema::dropIfExists('sessions')` para que la tabla sea responsabilidad de su migración dedicada.
-3. Conservar `2026_08_31_162150_create_sessions_table.php` sin cambios.
-4. Como los datos de esta demo son falsos y se acordó empezar desde cero, volver a ejecutar `php artisan migrate:fresh --seed`. Este comando borra todas las tablas/datos antes de recrearlos.
-5. Si vuelve a fallar, guardar el primer error completo y diagnosticarlo antes de repetir el comando.
+La última secuencia no confirmó todas las rutas/compilaciones end-to-end. Validar cuando sea conveniente:
 
-La última ejecución fallida pudo haber dejado algunas tablas creadas parcialmente. Una nueva ejecución de `migrate:fresh` vuelve a eliminarlas y empieza otra vez.
-
-## Validación funcional inmediata
-
-Después de que `migrate:fresh --seed` termine correctamente:
-
-1. Comprobar que existe el profesor de prueba (`profesor@test.com`, contraseña `12345678`) con asignatura Programación.
-2. Entrar como profesor y crear un grupo; revisar que aparece Programación sin pedir crear una asignatura.
-3. Abrir la planificación de clase y comprobar que el selector de asignatura muestra Programación para ese grupo.
-4. Registrar un profesor nuevo con asignatura y un alumno sin asignatura; comprobar validación/guardado para ambos roles.
-5. Ejecutar las pruebas disponibles (`php artisan test`) y la compilación frontend (`npm run build`) después de corregir migraciones.
+- Iniciar como Mario (`profesor@test.com`, `12345678`), comprobar Programación en el grupo sembrado y crear un segundo grupo.
+- Probar registro teacher/student y la asignatura condicional.
+- Abrir `/student/home` con cuenta student; confirmar menú propio y que no hay 403.
+- Probar `/profile`: editar campos, cambiar asignatura de profesor, subir foto y comprobar avatar en desktop/móvil.
+- Probar logout POST y verificar que termina la sesión.
+- Ejecutar `php artisan route:list`, `php artisan view:cache`, `php artisan test` y `npm run build` si el usuario lo solicita o cuando se cierre una fase.
+- En pasos recientes, `get_errors` encontró archivos Blade sin errores, pero `php artisan view:cache` fue omitido en una solicitud anterior.
 
 ## Trabajo anterior relevante
 
@@ -85,16 +89,46 @@ Después de que `migrate:fresh --seed` termine correctamente:
 - El flujo de justificación tiene estado `pending` por defecto, `approved` al aceptar y `rejected` al rechazar. Aprobar marca la asistencia `excused`; rechazar conserva el estado de asistencia. No hay todavía interfaz/ruta de envío de justificantes del alumno.
 - Se añadió un middleware de rol `EnsureUserHasRole` y alias `role` en `bootstrap/app.php`.
 - La selección de rol en el registro permanece abierta para la demo, por decisión explícita.
+- El perfil compartido se implementa en `resources/views/layouts/profile.blade.php` y las rutas comunes están bajo `auth` sin middleware de rol.
+- El layout base se comparte; el menú docente/alumno se elige por `auth()->user()->role`.
 
-## Pendientes de alcance posterior
+## Plan siguiente: alumno y pulido
 
-- Añadir confirmación manual de asistencia por el profesor cuando un alumno no pueda usar el QR. Debe validar propiedad de clase/grupo y actualizar la asistencia existente sin crear duplicados (`attendances` tiene unicidad por `class_session_id` + `user_id`).
-- Implementar la interfaz del alumno. El inicio compartido todavía requiere navegación/redirect según rol; revisar `LoginController` y el menú del layout antes de habilitarla.
-- Implementar envío de justificante por el alumno. La pantalla actual de justificantes es docente; comprobar pertenencia de `attendance.user_id` en servidor y crear estado `pending`.
-- Filtrar `/api/classes`: actualmente se observó que devuelve clases sin filtrar por usuario; para compartir calendario entre docente y alumno hay que devolver solo las clases del profesor o grupo correspondiente.
-- Mejorar el resumen de justificantes: controlador docente actualmente obtiene solicitudes de todos los estados, mientras que la vista las representa como pendientes. Decidir si se filtra solo `pending` o se muestran estados reales.
-- Repetir una revisión de propiedad/rol en endpoints sensibles antes de considerar finalizada la autorización.
+Las prioridades compartidas por el usuario para continuar son:
+
+### Fase 10 — Alumno: unirse al grupo
+
+- Crear pantalla para introducir código/enlace de grupo.
+- Validar el código y asociar el `group_id` al alumno autenticado.
+- Mostrar el grupo al que pertenece y rechazar códigos/grupos no válidos.
+
+### Fase 11 — Alumno: clases
+
+- Mostrar sus asignaturas y clases, calendario compartido y detalle de clase.
+- Consultar asistencia: presente, ausente o justificada.
+- Mantener al alumno en modo solo lectura: no crear, editar ni eliminar clases.
+
+### Fase 12 — Alumno: escanear QR
+
+- Crear pantalla Escanear con acceso a cámara y una librería lectora QR.
+- Leer URL firmada, registrar asistencia y mostrar éxito/error.
+- Evitar registros duplicados; `attendances` tiene unique por `class_session_id` + `user_id`.
+
+### Fase 13 — Alumno: histórico
+
+- Historial con presentes, tardanzas, ausencias y justificadas.
+- Mostrar porcentaje total y resumen visual bajo “Mi asistencia”.
+
+### Fase 14 — Alumno: justificantes
+
+- Mostrar ausencias y formulario de justificación con motivo y documento opcional.
+- Validar archivo, guardar `pending` y permitir consultar posteriormente su estado.
+- Verificar en servidor que la asistencia pertenece al alumno autenticado.
+
+### Fase 15 — Diseño y pulido
+
+Empezar solo cuando funcionen las fases anteriores: colores, tipografías, iconos, bordes/sombras, hover/focus, empty states, errores/éxitos/loading, breakpoints móvil/tablet/desktop y revisión de modales/navegación.
 
 ## Instrucción del repositorio
 
-`AGENTS.md` exige verificar PHP/Composer y configurar Laravel Boost antes de que un agente realice cambios de aplicación. Boost no se encontró instalado cuando se comprobó; su instalación modifica dependencias e instrucciones. El usuario decidió continuar guiándose y aplicar los cambios por su cuenta, así que no se instaló.
+`AGENTS.md` pide Laravel Boost antes de cambios de aplicación. El usuario ha pedido expresamente trabajar sin Boost; no instalarlo ni modificar dependencias sin nueva autorización.

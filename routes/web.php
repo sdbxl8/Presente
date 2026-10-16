@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\StudentDashboardController;
 
+
 Route::get('/', function () {
     if (!Auth::check()) {
         return redirect()->route('login');
@@ -124,4 +125,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])
         ->name('profile.photo.update');
+});
+
+//redirecciones: escaner
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/scan', [AttendanceController::class, 'scan'])
+        ->name('student.scan');
 });

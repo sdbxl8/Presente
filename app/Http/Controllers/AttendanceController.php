@@ -60,4 +60,9 @@ public function store(Request $request, ClassSession $classSession)
 
     return back()->with('success', 'Asistencia registrada correctamente.');
 }
+// scaner student
+public function scan()
+{
+    return view('student.student-scan');
+}
 }
