@@ -13,6 +13,7 @@ use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\StudentClassController;
 
 
 Route::get('/', function () {
@@ -128,7 +129,13 @@ Route::middleware('auth')->group(function () {
 });
 
 //redirecciones: escaner
+    Route::middleware(['auth', 'role:student'])->group(function () {
+        Route::get('/student/scan', [AttendanceController::class, 'scan'])
+            ->name('student.scan');
+    });
+
+//redirecciones: clases estudiante
 Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/scan', [AttendanceController::class, 'scan'])
-        ->name('student.scan');
+    Route::get('/student/class', [ClassController::class, 'index'])
+        ->name('student.class');
 });

@@ -3,6 +3,7 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
+// Generación de QR
 document.querySelectorAll('canvas[data-qr-url]').forEach(async (canvas) => {
     const url = canvas.dataset.qrUrl;
 
@@ -20,6 +21,7 @@ document.querySelectorAll('canvas[data-qr-url]').forEach(async (canvas) => {
     }
 });
 
+// escaner qrhtml5
 document.addEventListener('DOMContentLoaded', () => {
     const scannerPage = document.querySelector('[data-student-qr-scanner]');
 
@@ -121,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// calendario
 
 document.addEventListener('DOMContentLoaded', () => {
     const calendarEl = document.getElementById('teacher-calendar');
@@ -152,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     };
 
-    // Actualiza la fecha y hora cada segundo
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
