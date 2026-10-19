@@ -137,7 +137,7 @@
                             </button>
                         </div>
 
-                        <form method="POST" action="#" enctype="multipart/form-data" class="mt-6 space-y-4">
+                        <form method="POST" action="{{ route('student.justifications.store', $attendance) }}" enctype="multipart/form-data" class="mt-6 space-y-4">
                             @csrf
 
                             <div>

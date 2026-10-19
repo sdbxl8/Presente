@@ -47,8 +47,11 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.home');
     Route::get('/student/classes', [StudentClassController::class, 'index'])
         ->name('student.classes');
+
     Route::get('/student/justifications', [StudentJustificationController::class, 'index'])
         ->name('student.justifications');
+    Route::post('/student/justifications/{attendance}', [StudentJustificationController::class, 'store'])
+    ->name('student.justifications.store');
 });
 
 //redirecciones: grupos profesor
