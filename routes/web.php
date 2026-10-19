@@ -14,7 +14,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentClassController;
-
+use App\Http\Controllers\StudentJustificationController;
 
 Route::get('/', function () {
     if (!Auth::check()) {
@@ -45,6 +45,10 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/student/home', [StudentDashboardController::class, 'dashboard'])
         ->name('student.home');
+    Route::get('/student/classes', [StudentClassController::class, 'index'])
+        ->name('student.classes');
+    Route::get('/student/justifications', [StudentJustificationController::class, 'index'])
+        ->name('student.justifications');
 });
 
 //redirecciones: grupos profesor
@@ -134,8 +138,4 @@ Route::middleware('auth')->group(function () {
             ->name('student.scan');
     });
 
-//redirecciones: clases estudiante
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/class', [ClassController::class, 'index'])
-        ->name('student.class');
-});
+
