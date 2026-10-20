@@ -27,9 +27,12 @@
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button type="submit" class="w-full rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100">
-                Cerrar sesión
-            </button>
+            <div class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50 hover:text-rose-800">
+                <i data-lucide="log-out" class="h-3 w-3 lg:h-5 lg:w-5"></i>
+                <button type="submit" class="w-full rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-rose-700 transition hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100">
+                    Cerrar sesión
+                </button>
+            </div>
         </form>
     </div>
 </details>

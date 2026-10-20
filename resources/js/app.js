@@ -3,6 +3,19 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
+import {
+    createIcons,
+    House,
+    Users,
+    CalendarDays,
+    ScanQrCode,
+    ClipboardCheck,
+    FileText,
+    CircleUserRound,
+    LogOut,
+} from 'lucide';
+
+
 // Generación de QR
 document.querySelectorAll('canvas[data-qr-url]').forEach(async (canvas) => {
     const url = canvas.dataset.qrUrl;
@@ -186,6 +199,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     calendar.render();
+});
+
+// iconos: lucide
+
+createIcons({
+    icons: {
+        House,
+        Users,
+        CalendarDays,
+        ScanQrCode,
+        ClipboardCheck,
+        FileText,
+        CircleUserRound,
+        LogOut,
+    },
+    attrs: {
+        'stroke-width': 2,
+    },
 });
 
 

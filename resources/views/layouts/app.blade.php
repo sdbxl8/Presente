@@ -71,7 +71,7 @@
             <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
                 @if (auth()->user()->role === 'teacher')
                     <a href="{{ route('home') }}" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
-                        <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-sky-600 text-xs text-white">I</span>
+                        <i data-lucide="House" class="h-3 w-3 lg:h-5 lg:w-5"></i>
                         Inicio
                     </a>
                     @include('teacher.teacher-menu')
