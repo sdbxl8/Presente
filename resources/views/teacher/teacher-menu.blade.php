@@ -10,7 +10,7 @@
 </button>
 
 <button type="button" onclick="window.location.href='{{ route('teacher.classes') }}'" class="flex min-h-14 w-full flex-col items-center justify-center gap-1 rounded-xl px-2 text-xs font-medium text-slate-500 transition hover:bg-slate-50 hover:text-sky-700 lg:min-h-0 lg:flex-row lg:justify-start lg:gap-3 lg:px-4 lg:py-3 lg:text-sm">
-	<i data-lucide="book-open" class="h-3 w-3 lg:h-5 lg:w-5"></i>
+	<i data-lucide="calendar-days" class="h-3 w-3 lg:h-5 lg:w-5"></i>
 	<span>Clases</span>
 </button>
 

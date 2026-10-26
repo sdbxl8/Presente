@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="min-h-screen bg-slate-100 px-4 py-6 sm:px-6 lg:px-8">

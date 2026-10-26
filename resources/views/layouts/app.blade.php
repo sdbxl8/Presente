@@ -68,12 +68,10 @@
         </main>
 
         <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 px-3 py-2 backdrop-blur lg:hidden" aria-label="Navegación móvil">
+
             <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
                 @if (auth()->user()->role === 'teacher')
-                    <a href="{{ route('home') }}" class="flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
-                        <i data-lucide="House" class="h-3 w-3 lg:h-5 lg:w-5"></i>
-                        Inicio
-                    </a>
+
                     @include('teacher.teacher-menu')
                 @else
                     @include('student.student-menu')
