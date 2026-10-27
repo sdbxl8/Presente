@@ -11,7 +11,7 @@ class ProfileController extends Controller
 {
     public function edit(Request $request)
 {
-    $profileUser = $request->user()->load('group.subjects');
+    $profileUser = $request->user()->load('studentGroups.subjects');
 
     return view('layouts.profile', compact('profileUser'));
 }

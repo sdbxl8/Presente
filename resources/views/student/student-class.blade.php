@@ -6,6 +6,8 @@
 
         $classes = $classes ?? collect();
 
+        $studentGroups = $student->studentGroups;
+
         $teachers = $classes
             ->map(fn ($class) => $class->subject?->group?->teacher)
             ->filter()
@@ -239,7 +241,7 @@
                     </h3>
 
                     <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-[#789287]">
-                        @if (blank($student?->group_id))
+                        @if ($studentGroups->isEmpty())
                             Cuando te unas a un grupo, aquí aparecerán sus clases.
                         @else
                             Tu grupo todavía no tiene clases planificadas.

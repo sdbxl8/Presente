@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="mx-auto max-w-7xl space-y-7 sm:space-y-8">
 
         {{-- Cabecera --}}
@@ -122,6 +123,11 @@
 
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 @forelse ($groups as $group)
+                 @php
+                    $availableStudentsForGroup = ($students ?? collect())
+                        ->whereNotIn('id', $group->students->modelKeys());
+                @endphp
+
                     <article class="group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-[#e3eee8] bg-white shadow-[0_14px_40px_rgba(30,70,54,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#b5ebd2] hover:shadow-[0_18px_42px_rgba(30,70,54,0.075)]">
 
                         <div class="border-b border-[#edf3ef] bg-gradient-to-br from-[#effbf6] via-white to-[#f1edff] p-5 sm:p-6">
@@ -439,7 +445,7 @@
                             </legend>
 
                             <div class="max-h-72 space-y-2 overflow-y-auto">
-                                @forelse (($students ?? collect()) as $student)
+                                @forelse ($availableStudentsForGroup as $student)
                                     <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e3eee8] bg-[#f7fbf8] px-3 py-3 text-sm text-[#466157] transition hover:border-[#b5ebd2] hover:bg-[#effbf6]">
                                         <input
                                             type="checkbox"

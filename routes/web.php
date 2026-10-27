@@ -101,7 +101,7 @@ Route::get('/api/classes', function () {
             ],
         ];
     });
-});
+})->middleware('auth');
 
 //redirecciones: justificantes
 Route::middleware(['auth', 'role:teacher'])->group(function () {

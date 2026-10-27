@@ -5,16 +5,21 @@
     @php
         $student = auth()->user();
 
-        $group = $student->group;
+        $studentGroups = $student->studentGroups()
+            ->with('subjects')
+            ->get();
+
+    // Se mantiene para el texto de respaldo de las tarjetas.
+        $group = $studentGroups->first();
 
         $attendances = $student->attendances()
             ->with(['classSession.subject', 'justification'])
             ->get();
 
-        $upcomingClasses = \App\Models\ClassSession::with('subject')
-            ->whereHas('subject.group', function ($query) use ($student) {
-                $query->whereKey($student->group_id);
-            })
+        $upcomingClasses = \App\Models\ClassSession::with('subject.group')
+            ->whereHas('subject.group.students', function ($query) use ($student) {
+        $query->whereKey($student->id);
+        })
             ->whereDate('date', '>=', today())
             ->whereIn('status', ['scheduled', 'open'])
             ->orderBy('date')
@@ -73,7 +78,7 @@
                         Consulta tu asistencia, revisa tus próximas clases y mantén tu actividad académica al día.
                     </p>
 
-                    @if ($group)
+                    @if ($studentGroups->isNotEmpty())
                         <div class="mt-5 inline-flex max-w-full items-center gap-2 rounded-full border border-[#dcefe4] bg-white/80 px-4 py-2 text-sm font-semibold text-[#466157]">
                             <svg viewBox="0 0 24 24" class="h-4 w-4 shrink-0 text-[#168d6b]" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                 <circle cx="9" cy="8" r="3.5"/>
@@ -564,14 +569,14 @@
                         </h3>
 
                         <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-[#789287]">
-                            @if ($group)
+                            @if ({{ $studentGroups->pluck('name')->join(' · ') }})
                                 Cuando tu profesor programe nuevas sesiones para tu grupo, aparecerán aquí.
                             @else
                                 Cuando te unas a un grupo, podrás consultar aquí tus próximas clases.
                             @endif
                         </p>
 
-                        @if ($group)
+                        @if ({{ $studentGroups->pluck('name')->join(' · ') }})
                             <a
                                 href="{{ route('student.classes') }}"
                                 class="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#c9ead8] bg-white px-4 py-3 text-sm font-bold text-[#127257] transition hover:bg-[#effbf6] focus:outline-none focus:ring-4 focus:ring-[#d8f5e7]"

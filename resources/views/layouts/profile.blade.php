@@ -4,9 +4,16 @@
 
 @php
     $profileSubject = $profileUser->role === 'teacher'
-        ? ($profileUser->subject_name ?: 'Sin asignatura asignada')
-        : ($profileUser->group?->subjects?->pluck('name')->filter()->implode(', ') ?: 'Sin asignatura asignada');
-
+    ? ($profileUser->subject_name ?: 'Sin asignatura asignada')
+    : (
+        $profileUser->studentGroups
+            ->flatMap(fn ($group) => $group->subjects)
+            ->pluck('name')
+            ->filter()
+            ->unique()
+            ->implode(', ')
+        ?: 'Sin asignatura asignada'
+    );
     $profileInitials = strtoupper(
         substr($profileUser->name, 0, 1) . substr($profileUser->surname, 0, 1)
     );

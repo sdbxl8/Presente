@@ -17,11 +17,15 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-    public function group()
+    public function studentGroups()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsToMany(
+            Group::class,
+            'group_student',
+            'student_id',
+            'group_id'
+        )->withTimestamps();
     }
-
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
