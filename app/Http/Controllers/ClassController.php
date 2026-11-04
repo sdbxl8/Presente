@@ -53,34 +53,28 @@ class ClassController extends Controller
 
     public function open(ClassSession $classSession)
 {
-    $classSession->load('subject.group');
+    // Registrar el momento real en el que comienza el control.
+    $classSession->status = 'open';
+    $classSession->updated_at = now();
+    $classSession->save();
 
-    abort_unless(
-        $classSession->subject->group->teacher_id === Auth::id(),
-        403
-    );
-
-    $expiresAt = Carbon::parse(
-        $classSession->date . ' ' . $classSession->end_time
-    );
-
-    $attendanceUrl = URL::temporarySignedRoute(
+    // Generar un enlace firmado sin expiración por fecha u horario.
+    // updated_at identifica esta apertura concreta.
+    $attendanceUrl = URL::signedRoute(
         'attendance.show',
-        $expiresAt,
         [
-            'classSession' => $classSession->id,
-            'nonce' => Str::random(32),
-        ]
+        'classSession' => $classSession->id,
+        'started_at' => $classSession->updated_at->timestamp,
+        ],
+        null,
+        false
     );
-
-    $classSession->update([
-        'status' => 'open',
-    ]);
 
     return redirect()
         ->route('teacher.classes')
         ->with('open_class_id', $classSession->id)
         ->with('attendance_url', $attendanceUrl);
+
 }
 
     public function close(ClassSession $classSession)

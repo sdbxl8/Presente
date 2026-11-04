@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\GroupController;
@@ -9,11 +10,20 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\JustificationController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\StudentClassController;
+use App\Http\Controllers\StudentJustificationController;
 
 Route::get('/', function () {
-    return Auth::check()
-        ? redirect()->route('home')
-        : redirect()->route('login');
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+//redireccion segun el rol de usuario al iniciar sesion
+    return Auth::user()->role === 'student'
+        ? redirect()->route('student.home')
+        : redirect()->route('home');
 });
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
@@ -31,13 +41,25 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
         ->name('teacher.dashboard');
 });
 
+//redirecciones: interfaz de inicio estudiante
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/home', [StudentDashboardController::class, 'dashboard'])
+        ->name('student.home');
+    Route::get('/student/classes', [StudentClassController::class, 'index'])
+        ->name('student.classes');
+
+    Route::get('/student/justifications', [StudentJustificationController::class, 'index'])
+        ->name('student.justifications');
+    Route::post('/student/justifications/{attendance}', [StudentJustificationController::class, 'store'])
+    ->name('student.justifications.store');
+});
+
 //redirecciones: grupos profesor
 Route::middleware(['auth', 'role:teacher'])->group(function () {
 Route::get('/teacher/groups', [GroupController::class, 'index'])->name('teacher.groups');
 
 Route::post('/teacher/groups', [GroupController::class, 'store'])->name('teacher.groups.store');
 Route::post('/teacher/groups/{group}/students',[GroupController::class, 'addStudents'])->name('teacher.groups.students');
-Route::post('/teacher/groups/{group}/subjects', [GroupController::class, 'storeSubject'])->name('teacher.groups.subjects.store');
 
 //redirecciones: clases profesor
 Route::get('/teacher/classes', [ClassController::class, 'index'])->name('teacher.classes');
@@ -55,11 +77,11 @@ Route::patch('/teacher/classes/{classSession}/close', [ClassController::class, '
 //redirecciones: asistencia
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/attendance/{classSession}', [AttendanceController::class, 'show'])
-        ->middleware('signed')
+        ->middleware('signed:relative')
         ->name('attendance.show');
 
     Route::post('/attendance/{classSession}', [AttendanceController::class, 'store'])
-        ->middleware('signed')
+        ->middleware('signed:relative')
         ->name('attendance.store');
 });
 
@@ -79,7 +101,7 @@ Route::get('/api/classes', function () {
             ],
         ];
     });
-});
+})->middleware('auth');
 
 //redirecciones: justificantes
 Route::middleware(['auth', 'role:teacher'])->group(function () {
@@ -92,4 +114,31 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::patch('/teacher/justifications/{justification}/reject', [JustificationController::class, 'reject'])
         ->name('teacher.justifications.reject');
 });
+
+//redirecciones: perfil
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
+    })->name('logout');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])
+        ->name('profile.photo.update');
+});
+
+//redirecciones: escaner
+    Route::middleware(['auth', 'role:student'])->group(function () {
+        Route::get('/student/scan', [AttendanceController::class, 'scan'])
+            ->name('student.scan');
+    });
+
 

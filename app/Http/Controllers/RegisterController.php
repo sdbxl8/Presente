@@ -23,6 +23,7 @@ class RegisterController extends Controller
             'email' => ['required','string','email','max:255','unique:users,email'],
             'password' => ['required','string','min:8'],
             'role' => ['required','in:teacher,student'],
+            'subject_name' => ['exclude_unless:role,teacher','required','string','max:100'],
         ]);
 
         $user = User::create([
@@ -31,6 +32,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role' => $data['role'],
+            'subject_name' => $data['subject_name'] ?? null,
         ]);
 
         return redirect()->route('login')->with('success','usuario registrado correctamente');

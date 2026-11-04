@@ -12,16 +12,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'surname', 'email', 'password','role','group_id'])]
+#[Fillable(['name', 'surname', 'email', 'password','role','group_id','subject_name','photo'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-    public function group()
+    public function studentGroups()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsToMany(
+            Group::class,
+            'group_student',
+            'student_id',
+            'group_id'
+        )->withTimestamps();
     }
-
     public function attendances()
     {
         return $this->hasMany(Attendance::class);

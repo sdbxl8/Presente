@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             'surname'=>'profesor',
             'email' => 'profesor@test.com',
             'password' => Hash::make('12345678'),
-            'role' => 'teacher'
+            'role' => 'teacher',
+            'subject_name' => 'Programación',
         ]);
 
         $group = Group::create([
@@ -34,12 +35,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Subject::create([
-            'name' => 'Programación',
-            'group_id' => $group->id,
-        ]);
-
-        Subject::create([
-            'name' => 'Bases de datos',
+            'name' => $teacher->subject_name,
             'group_id' => $group->id,
         ]);
 
