@@ -119,6 +119,9 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
 
     Route::patch('/teacher/justifications/{justification}/reject', [JustificationController::class, 'reject'])
         ->name('teacher.justifications.reject');
+
+    Route::get('/teacher/justifications/{justification}/document', [JustificationController::class, 'download'])
+        ->name('teacher.justifications.document');
 });
 
 //redirecciones: perfil

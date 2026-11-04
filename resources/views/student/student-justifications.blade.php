@@ -260,6 +260,116 @@
         </div>
     </details>
 
+     @if ($canSubmit)
+        <div
+            id="justification-modal-{{ $attendance->id }}"
+            class="{{ $errors->any() && old('attendance_id') == $attendance->id ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto bg-[#173d31]/50 px-4 py-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="justification-title-{{ $attendance->id }}"
+        >
+            <div class="mx-auto max-w-lg rounded-2xl border border-[#e3eee8] bg-white p-6 shadow-2xl sm:p-8">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2
+                            id="justification-title-{{ $attendance->id }}"
+                            class="text-xl font-extrabold text-[#173d31]"
+                        >
+                            Enviar justificante
+                        </h2>
+                        <p class="mt-2 text-sm leading-6 text-[#789287]">
+                            Explica el motivo. Puedes adjuntar un PDF o una imagen.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="document.getElementById('justification-modal-{{ $attendance->id }}').classList.add('hidden')"
+                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xl text-[#789287] hover:bg-[#f7fbf8]"
+                        aria-label="Cerrar ventana"
+                    >
+                        &times;
+                    </button>
+                </div>
+
+                <form
+                    action="{{ route('student.justifications.store', $attendance) }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="mt-6 space-y-5"
+                >
+                    @csrf
+                    <input type="hidden" name="attendance_id" value="{{ $attendance->id }}">
+
+                    <div>
+                        <label
+                            for="reason-{{ $attendance->id }}"
+                            class="mb-2 block text-sm font-bold text-[#466157]"
+                        >
+                            Motivo <span class="text-rose-600">*</span>
+                        </label>
+
+                        <textarea
+                            id="reason-{{ $attendance->id }}"
+                            name="reason"
+                            rows="5"
+                            maxlength="500"
+                            required
+                            class="w-full rounded-xl border border-[#dce8e2] px-4 py-3 text-sm text-[#173d31] outline-none focus:border-[#168d6b] focus:ring-4 focus:ring-[#d8f5e7]"
+                            placeholder="Escribe aquí el motivo de la ausencia o el retraso."
+                        >{{ old('attendance_id') == $attendance->id ? old('reason') : '' }}</textarea>
+
+                        @if ($errors->has('reason') && old('attendance_id') == $attendance->id)
+                            <p class="mt-2 text-sm text-rose-700">{{ $errors->first('reason') }}</p>
+                        @endif
+                    </div>
+
+                    <div>
+                        <label
+                            for="document-{{ $attendance->id }}"
+                            class="mb-2 block text-sm font-bold text-[#466157]"
+                        >
+                            Documento (opcional)
+                        </label>
+
+                        <input
+                            id="document-{{ $attendance->id }}"
+                            type="file"
+                            name="document"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            class="block w-full rounded-xl border border-[#dce8e2] bg-white text-sm text-[#466157] file:mr-4 file:border-0 file:bg-[#effbf6] file:px-4 file:py-3 file:font-semibold file:text-[#127257]"
+                        >
+
+                        <p class="mt-2 text-xs text-[#789287]">
+                            Formatos permitidos: PDF, JPG o PNG. Tamaño máximo: 5 MB.
+                        </p>
+
+                        @if ($errors->has('document') && old('attendance_id') == $attendance->id)
+                            <p class="mt-2 text-sm text-rose-700">{{ $errors->first('document') }}</p>
+                        @endif
+                    </div>
+
+                    <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                        <button
+                            type="button"
+                            onclick="document.getElementById('justification-modal-{{ $attendance->id }}').classList.add('hidden')"
+                            class="min-h-11 rounded-xl border border-[#e3eee8] px-5 py-3 text-sm font-bold text-[#466157] hover:bg-[#f7fbf8]"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="min-h-11 rounded-xl bg-[#168d6b] px-5 py-3 text-sm font-bold text-white hover:bg-[#127257] focus:outline-none focus:ring-4 focus:ring-[#b5ebd2]"
+                        >
+                            Enviar justificante
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
+
 @empty
     <div class="rounded-[1.75rem] border border-dashed border-[#cfe7d9] bg-white/80 px-5 py-12 text-center shadow-[0_14px_40px_rgba(30,70,54,0.035)] sm:px-8 sm:py-16">
         <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#eaf8f0] text-[#168d6b]">

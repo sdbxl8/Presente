@@ -123,6 +123,17 @@
                     $classSession = $attendance?->classSession;
                     $studentName = trim(($student?->name ?? '') . ' ' . ($student?->surname ?? ''));
                     $documentPath = $justification->document_path;
+                    $statusLabel = match ($justification->status) {
+                        'approved' => 'Aprobado',
+                        'rejected' => 'Denegado',
+                        default => 'Pendiente de revisión',
+                    };
+
+                    $statusClasses = match ($justification->status) {
+                        'approved' => 'border-[#c9ead8] bg-[#effbf6] text-[#127257]',
+                        'rejected' => 'border-[#f3cdca] bg-[#fff0ef] text-rose-800',
+                        default => 'border-[#f5d8c8] bg-[#fff5eb] text-[#98613c]',
+                    };
                 @endphp
 
                 <article class="overflow-hidden rounded-[1.5rem] border border-[#e3eee8] bg-white shadow-[0_14px_40px_rgba(30,70,54,0.045)] transition duration-200 hover:shadow-[0_18px_42px_rgba(30,70,54,0.075)]">
@@ -162,7 +173,7 @@
 
                             <span class="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-[#f5d8c8] bg-[#fff5eb] px-3.5 py-2 text-xs font-bold text-[#98613c]">
                                 <span class="h-2 w-2 rounded-full bg-[#d99a65]"></span>
-                                Pendiente de revisión
+                                {{ $statusLabel }}
                             </span>
                         </div>
 
@@ -206,22 +217,21 @@
                             </div>
 
                             @if ($documentPath)
-                                <button
-                                    type="button"
-                                    data-justification-download="{{ $justification->id }}"
-                                    data-document-path="{{ $documentPath }}"
+                                <a
+                                    href="{{ route('teacher.justifications.document', $justification) }}"
                                     class="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-[#c9ead8] bg-white px-4 py-2.5 text-sm font-bold text-[#127257] transition hover:border-[#83dbb8] hover:bg-[#effbf6] focus:outline-none focus:ring-4 focus:ring-[#d8f5e7] sm:w-auto"
                                 >
                                     <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/>
                                     </svg>
-                                    Descargar documento
-                                </button>
+                                Descargar documento
+                                </a>
                             @endif
                         </div>
 
                         {{-- Acciones: se conservan las rutas y los métodos originales --}}
-                        <div class="grid grid-cols-1 gap-3 border-t border-[#edf3ef] pt-5 sm:grid-cols-2">
+                        @if ($justification->status === 'pending')
+                            <div class="grid grid-cols-1 gap-3 border-t border-[#edf3ef] pt-5 sm:grid-cols-2">
 
                             <form action="{{ route('teacher.justifications.reject', $justification) }}" method="POST">
                                 @csrf
@@ -255,6 +265,7 @@
                             </form>
 
                         </div>
+                        @endif
                     </div>
                 </article>
 
