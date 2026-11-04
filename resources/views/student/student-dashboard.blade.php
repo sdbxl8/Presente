@@ -86,7 +86,7 @@
                             </svg>
 
                             <span class="truncate">
-                                {{ $group->name }}
+                                {{ $studentGroups->pluck('name')->join(' · ') }}
                             </span>
                         </div>
                     @endif
@@ -569,14 +569,14 @@
                         </h3>
 
                         <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-[#789287]">
-                            @if ({{ $studentGroups->pluck('name')->join(' · ') }})
+                            @if ($studentGroups->isNotEmpty())
                                 Cuando tu profesor programe nuevas sesiones para tu grupo, aparecerán aquí.
                             @else
                                 Cuando te unas a un grupo, podrás consultar aquí tus próximas clases.
                             @endif
                         </p>
 
-                        @if ({{ $studentGroups->pluck('name')->join(' · ') }})
+                        @if ($studentGroups->isNotEmpty())
                             <a
                                 href="{{ route('student.classes') }}"
                                 class="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#c9ead8] bg-white px-4 py-3 text-sm font-bold text-[#127257] transition hover:bg-[#effbf6] focus:outline-none focus:ring-4 focus:ring-[#d8f5e7]"

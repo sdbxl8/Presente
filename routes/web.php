@@ -77,11 +77,11 @@ Route::patch('/teacher/classes/{classSession}/close', [ClassController::class, '
 //redirecciones: asistencia
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/attendance/{classSession}', [AttendanceController::class, 'show'])
-        ->middleware('signed')
+        ->middleware('signed:relative')
         ->name('attendance.show');
 
     Route::post('/attendance/{classSession}', [AttendanceController::class, 'store'])
-        ->middleware('signed')
+        ->middleware('signed:relative')
         ->name('attendance.store');
 });
 

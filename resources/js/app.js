@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isAttendanceUrl = attendanceUrl.origin === window.location.origin
                         && /^\/attendance\/\d+$/.test(attendanceUrl.pathname)
                         && attendanceUrl.searchParams.has('signature')
-                        && attendanceUrl.searchParams.has('expires');
+                        && attendanceUrl.searchParams.has('started_at');
 
                     if (!isAttendanceUrl) {
                         statusElement.textContent = 'Este código no es un enlace válido de asistencia.';
