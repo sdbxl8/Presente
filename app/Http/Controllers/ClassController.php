@@ -51,20 +51,26 @@ class ClassController extends Controller
             return redirect()->route('teacher.classes');
     }
 
-    public function open(ClassSession $classSession)
+ public function open(ClassSession $classSession)
 {
-    // Registrar el momento real en el que comienza el control.
+    $classSession->load('subject.group');
+
+    abort_unless(
+        (int) $classSession->subject->group->teacher_id === (int) Auth::id(),
+        403
+    );
+
+    // Registrar el momento real de apertura.
     $classSession->status = 'open';
     $classSession->updated_at = now();
     $classSession->save();
 
-    // Generar un enlace firmado sin expiración por fecha u horario.
-    // updated_at identifica esta apertura concreta.
+    // Generar QR firmado sin caducidad temporal.
     $attendanceUrl = URL::signedRoute(
         'attendance.show',
         [
-        'classSession' => $classSession->id,
-        'started_at' => $classSession->updated_at->timestamp,
+            'classSession' => $classSession->id,
+            'started_at' => $classSession->updated_at->timestamp,
         ],
         null,
         false
@@ -74,7 +80,6 @@ class ClassController extends Controller
         ->route('teacher.classes')
         ->with('open_class_id', $classSession->id)
         ->with('attendance_url', $attendanceUrl);
-
 }
 
     public function close(ClassSession $classSession)

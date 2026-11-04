@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al detener el lector QR', error);
         }
     });
-});
+    });
 
 // calendario
 
