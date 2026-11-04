@@ -1,4 +1,8 @@
-<div id="start-class-modal-{{ $classSession->id }}" class="{{ session('open_class_id') == $classSession->id ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto bg-[#173d31]/10 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-8">
+<div
+    id="start-class-modal-{{ $classSession->id }}"
+    data-attendance-summary-url="{{ route('teacher.classes.attendance-summary', $classSession) }}"
+    class="{{ session('open_class_id') == $classSession->id ? '' : 'hidden' }} fixed inset-0 z-50 overflow-y-auto bg-[#173d31]/10 px-4 py-6 backdrop-blur-sm sm:px-6 sm:py-8"
+>
 
     {{-- Fondo del modal --}}
     <div
@@ -169,55 +173,48 @@
 
                     {{-- Contadores con los mismos identificadores --}}
                     <div class="mt-5 space-y-3">
+    <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#d8f0e2] bg-white p-3.5">
+        <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eaf8f0] text-[#168d6b]">
+                <i data-lucide="check-circle-2" class="h-5 w-5"></i>
+            </span>
+            <span class="text-sm font-semibold text-[#466157]">Presentes</span>
+        </div>
+        <span data-count="present" id="present-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-[#168d6b]">0</span>
+    </div>
 
-                        <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#d8f0e2] bg-white p-3.5">
-                            <div class="flex items-center gap-3">
-                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eaf8f0] text-[#168d6b]">
-                                    <i data-lucide="check-circle-2" class="h-5 w-5"></i>
-                                </span>
+    <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#f5d8c8] bg-white p-3.5">
+        <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff0e7] text-[#b96d48]">
+                <i data-lucide="clock-3" class="h-5 w-5"></i>
+            </span>
+            <span class="text-sm font-semibold text-[#466157]">Han llegado tarde</span>
+        </div>
+        <span data-count="late" id="late-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-[#b96d48]">0</span>
+    </div>
 
-                                <span class="text-sm font-semibold text-[#466157]">
-                                    Presentes
-                                </span>
-                            </div>
+    <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#f3cdca] bg-white p-3.5">
+        <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff0ef] text-rose-600">
+                <i data-lucide="user-round-x" class="h-5 w-5"></i>
+            </span>
+            <span class="text-sm font-semibold text-[#466157]">Ausentes</span>
+        </div>
+        <span data-count="absent" id="absent-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-rose-600">
+            {{ $classSession->subject->group->students->count() }}
+        </span>
+    </div>
 
-                            <span id="present-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-[#168d6b]">
-                                0
-                            </span>
-                        </div>
-
-                        <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#f5d8c8] bg-white p-3.5">
-                            <div class="flex items-center gap-3">
-                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff0e7] text-[#b96d48]">
-                                    <i data-lucide="clock-3" class="h-5 w-5"></i>
-                                </span>
-
-                                <span class="text-sm font-semibold text-[#466157]">
-                                    Han llegado tarde
-                                </span>
-                            </div>
-
-                            <span id="late-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-[#b96d48]">
-                                0
-                            </span>
-                        </div>
-
-                        <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#f3cdca] bg-white p-3.5">
-                            <div class="flex items-center gap-3">
-                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff0ef] text-rose-600">
-                                    <i data-lucide="user-round-x" class="h-5 w-5"></i>
-                                </span>
-
-                                <span class="text-sm font-semibold text-[#466157]">
-                                    Ausentes
-                                </span>
-                            </div>
-
-                            <span id="absent-count-{{ $classSession->id }}" class="text-xl font-extrabold tabular-nums text-rose-600">
-                                {{ $classSession->subject->group->students->count() }}
-                            </span>
-                        </div>
-                    </div>
+    <div class="flex items-center justify-between gap-3 rounded-2xl border border-[#e3eee8] bg-white p-3.5">
+        <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                <i data-lucide="hourglass" class="h-5 w-5"></i>
+            </span>
+            <span class="text-sm font-semibold text-[#466157]">Pendientes</span>
+        </div>
+        <span data-count="pending" class="text-xl font-extrabold tabular-nums text-slate-600">0</span>
+    </div>
+</div>
 
                     {{-- Listado de alumnos; se conserva student-status para JavaScript --}}
                     <div class="mt-5 overflow-hidden rounded-2xl border border-[#e3eee8] bg-white">
@@ -231,13 +228,19 @@
 
                         <div class="max-h-56 space-y-1 overflow-y-auto p-3">
                             @forelse ($classSession->subject->group->students as $student)
-                                <div class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition hover:bg-[#f7fbf8]">
+                                <div
+                                    class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition hover:bg-[#f7fbf8]"
+                                    data-student-id="{{ $student->id }}"
+                                >
                                     <span class="min-w-0 truncate text-sm font-medium text-[#466157]">
                                         {{ $student->name }} {{ $student->surname }}
                                     </span>
 
-                                    <span class="student-status shrink-0 rounded-full border border-[#f3cdca] bg-[#fff0ef] px-2.5 py-1 text-xs font-bold text-rose-700">
-                                        Ausente
+                                    <span
+                                        data-student-status
+                                        class="student-status shrink-0 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-bold text-slate-600"
+                                    >
+                                    Pendiente
                                     </span>
                                 </div>
                             @empty
@@ -285,62 +288,138 @@
     </div>
 </div>
 
+@once
 <script>
-	function startAttendanceControl(classId) {
-		const button = document.getElementById(`start-control-${classId}`);
-		const status = document.getElementById(`qr-status-${classId}`);
-		const countdown = document.getElementById(`countdown-${classId}`);
-		let remainingSeconds = 600;
+document.addEventListener('DOMContentLoaded', () => {
+    const statusStyles = {
+        pending: {
+            label: 'Pendiente',
+            classes: 'border-slate-200 bg-slate-50 text-slate-600',
+        },
+        present: {
+            label: 'Presente',
+            classes: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+        },
+        late: {
+            label: 'Tarde',
+            classes: 'border-orange-200 bg-orange-50 text-orange-700',
+        },
+        absent: {
+            label: 'Ausente',
+            classes: 'border-rose-200 bg-rose-50 text-rose-700',
+        },
+        excused: {
+            label: 'Justificado',
+            classes: 'border-sky-200 bg-sky-50 text-sky-700',
+        },
+    };
 
-		button.disabled = true;
-		button.textContent = 'Control iniciado';
-		button.classList.add('cursor-not-allowed', 'opacity-60');
-		status.textContent = 'Control activo';
-		status.classList.add('text-emerald-700');
-		const timer = window.setInterval(() => {
-			remainingSeconds -= 1;
-			const minutes = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
-			const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
-			countdown.textContent = `${minutes}:${seconds}`;
+    document.querySelectorAll('[data-attendance-summary-url]').forEach((modal) => {
+        let requestInProgress = false;
 
-			if (remainingSeconds <= 0) {
-				window.clearInterval(timer);
-				status.textContent = 'Control finalizado';
-				button.textContent = 'Control finalizado';
-			}
-		}, 1000);
-	}
-    function startAttendanceControl(classId) {
-        const status = document.getElementById(`qr-status-${classId}`);
-        const countdown = document.getElementById(`countdown-${classId}`);
-        const closeButton = document.querySelector(`#start-class-modal-${classId} button[type="submit"]`);
+        const countdown = modal.querySelector('[id^="countdown-"]');
+        const qrCanvas = modal.querySelector('canvas[data-qr-url]');
+        const qrUrl = qrCanvas?.dataset.qrUrl;
 
-        let remainingSeconds = 600;
+        if (countdown && qrUrl) {
+            const startedAt = Number(
+                new URL(qrUrl, window.location.origin).searchParams.get('started_at')
+            );
 
-        status.textContent = 'Control activo';
-        status.classList.add('text-emerald-700');
-        const timer = window.setInterval(() => {
-            remainingSeconds -= 1;
+            if (Number.isFinite(startedAt) && startedAt > 0) {
+                const deadline = startedAt * 1000 + 10 * 60 * 1000;
+                const qrStatus = modal.querySelector('[id^="qr-status-"]');
+                const startButton = modal.querySelector('[id^="start-control-"]');
 
-            const minutes = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
-            const seconds = (remainingSeconds % 60).toString().padStart(2, '0');
+                const updateCountdown = () => {
+                    const remainingSeconds = Math.max(
+                        0,
+                        Math.ceil((deadline - Date.now()) / 1000)
+                    );
+                    const minutes = Math.floor(remainingSeconds / 60)
+                        .toString()
+                        .padStart(2, '0');
+                    const seconds = (remainingSeconds % 60)
+                        .toString()
+                        .padStart(2, '0');
 
-            countdown.textContent = `${minutes}:${seconds}`;
-            if (remainingSeconds <= 0) {
-                window.clearInterval(timer);
-                status.textContent = 'Control finalizado';
-                countdown.textContent = '00:00';
+                    countdown.textContent = `${minutes}:${seconds}`;
+
+                    if (startButton) {
+                        startButton.disabled = true;
+                        startButton.textContent = remainingSeconds > 0
+                            ? 'Control iniciado'
+                            : 'Clase abierta: registro tardío';
+                        startButton.classList.add('cursor-not-allowed', 'opacity-60');
+                    }
+
+                    if (qrStatus) {
+                        qrStatus.textContent = remainingSeconds > 0
+                            ? 'Control activo: asistencia puntual'
+                            : 'Control activo: los nuevos registros serán tardíos';
+                    }
+                };
+
+                updateCountdown();
+                window.setInterval(updateCountdown, 1000);
             }
-        }, 1000);
-    }
+        }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const modals = document.querySelectorAll('[id^="start-class-modal-"]');
-        modals.forEach((modal) => {
-            if (!modal.classList.contains('hidden')) {
-                const classId = modal.id.replace('start-class-modal-', '');
-                startAttendanceControl(classId);
+        const refreshAttendance = async () => {
+            if (requestInProgress || modal.classList.contains('hidden')) {
+                return;
             }
-        });
+
+            requestInProgress = true;
+
+            try {
+                const response = await fetch(modal.dataset.attendanceSummaryUrl, {
+                    credentials: 'same-origin',
+                    headers: { Accept: 'application/json' },
+                    cache: 'no-store',
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Error al consultar asistencia: HTTP ${response.status}`
+                    );
+                }
+
+                const summary = await response.json();
+
+                summary.students.forEach((student) => {
+                    const row = modal.querySelector(
+                        `[data-student-id="${student.id}"]`
+                    );
+                    const badge = row?.querySelector('[data-student-status]');
+
+                    if (!badge) {
+                        return;
+                    }
+
+                    const style = statusStyles[student.status] ?? statusStyles.pending;
+                    badge.textContent = style.label;
+                    badge.className =
+                        `student-status shrink-0 rounded-full border px-2.5 py-1 text-xs font-bold ${style.classes}`;
+                });
+
+                Object.entries(summary.counts).forEach(([status, count]) => {
+                    const counter = modal.querySelector(`[data-count="${status}"]`);
+
+                    if (counter) {
+                        counter.textContent = count;
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                requestInProgress = false;
+            }
+        };
+
+        refreshAttendance();
+        window.setInterval(refreshAttendance, 5000);
     });
+});
 </script>
+@endonce

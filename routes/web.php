@@ -60,6 +60,10 @@ Route::get('/teacher/groups', [GroupController::class, 'index'])->name('teacher.
 
 Route::post('/teacher/groups', [GroupController::class, 'store'])->name('teacher.groups.store');
 Route::post('/teacher/groups/{group}/students',[GroupController::class, 'addStudents'])->name('teacher.groups.students');
+Route::get(
+    '/teacher/classes/{classSession}/attendance-summary',
+    [ClassController::class, 'attendanceSummary']
+)->name('teacher.classes.attendance-summary');
 
 //redirecciones: clases profesor
 Route::get('/teacher/classes', [ClassController::class, 'index'])->name('teacher.classes');

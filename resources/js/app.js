@@ -66,8 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
         statusElement.textContent = 'Solicitando acceso a la cámara…';
 
         try {
+            const cameras = await Html5Qrcode.getCameras();
+
+            if (cameras.length === 0) {
+                throw new Error('El navegador no detectó ninguna cámara.');
+            }
+
+            const camera = cameras.find(({ label }) =>
+                /back|rear|environment|trasera|posterior/i.test(label)
+            ) ?? cameras[0];
+
             await scanner.start(
-                { facingMode: 'environment' },
+                camera.id,
                 {
                     fps: 10,
                     qrbox: (viewfinderWidth, viewfinderHeight) => {

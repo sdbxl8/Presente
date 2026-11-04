@@ -82,6 +82,47 @@ class ClassController extends Controller
         ->with('attendance_url', $attendanceUrl);
 }
 
+public function attendanceSummary(ClassSession $classSession)
+{
+    $classSession->load('subject.group.students');
+
+    abort_unless(
+        (int) $classSession->subject->group->teacher_id === (int) Auth::id(),
+        403
+    );
+
+    $students = $classSession->subject->group->students;
+
+    $attendances = $classSession->attendances()
+        ->whereIn('user_id', $students->modelKeys())
+        ->get()
+        ->keyBy('user_id');
+
+    $studentStatuses = $students->map(function ($student) use ($attendances) {
+        $attendance = $attendances->get($student->id);
+
+        return [
+            'id' => $student->id,
+            'name' => $student->name . ' ' . $student->surname,
+            'status' => $attendance?->status ?? 'pending',
+        ];
+    })->values();
+
+    $counts = $studentStatuses->countBy('status');
+
+    return response()->json([
+        'class_status' => $classSession->status,
+        'students' => $studentStatuses,
+        'counts' => [
+            'present' => $counts->get('present', 0),
+            'late' => $counts->get('late', 0),
+            'absent' => $counts->get('absent', 0),
+            'pending' => $counts->get('pending', 0),
+            'excused' => $counts->get('excused', 0),
+        ],
+    ]);
+}
+
     public function close(ClassSession $classSession)
 {
     $classSession->load('subject.group');
